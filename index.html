@@ -74,6 +74,14 @@ nav a:hover{background:rgba(255,255,255,.08);color:#fff}
 @media(max-width:900px){.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.g3{grid-template-columns:1fr}}
 .g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.rev{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;background:var(--dark);color:#fff;border-radius:16px;padding:36px;position:relative;overflow:hidden}
+.rev:before{content:"";position:absolute;inset:10px;border:1px solid rgba(255,255,255,.14);border-radius:10px;pointer-events:none}
+.rev .kicker{color:var(--acc)}.rev h2{color:#fff}.rev p{color:#c3c8ce;max-width:560px}
+.stars{display:flex;gap:4px;margin:4px 0 18px}.stars svg{width:24px;height:24px;fill:var(--acc)}
+.rev-qr{background:#fff;border-radius:12px;padding:14px;text-align:center;border:3px solid var(--acc)}
+.rev-qr img{display:block;width:150px;height:150px;image-rendering:pixelated}
+.rev-qr span{display:block;margin-top:8px;font:700 12px Archivo;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+@media (max-width:720px){.rev{grid-template-columns:1fr;padding:28px}.rev-qr{display:none}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px}
 .card h3{font-size:19px;margin-bottom:8px}
 .card p{color:var(--ink2);font-size:15px}
@@ -484,6 +492,24 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
         <a class="btn btn-acc" href="https://www.google.com/maps/search/?api=1&query=%C3%81ngela+Di+Natale+de+Fulgenzi+56%2C+Jun%C3%ADn%2C+Buenos+Aires" target="_blank" rel="noopener">Cómo llegar</a>
       </div>
       <iframe class="loc-map" src="https://www.google.com/maps?q=%C3%81ngela+Di+Natale+de+Fulgenzi+56,+Jun%C3%ADn,+Buenos+Aires&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa: Ángela Di Natale de Fulgenzi 56, Junín" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<section id="opiniones" style="padding-top:0">
+  <div class="wrap">
+    <div class="rev">
+      <div>
+        <div class="kicker">Opiniones</div>
+        <h2>¿Trabajaste con nosotros? Contanos cómo te fue</h2>
+        <div class="stars" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/></svg></div>
+        <p>Tu opinión en Google ayuda a otras familias y profesionales de Junín a elegir con confianza, y a nosotros a seguir mejorando. Te lleva menos de un minuto.</p>
+        <a class="btn btn-acc" href="https://g.page/r/CeXHeLOC4CdJEBM/review" target="_blank" rel="noopener" style="margin-top:20px">Dejar mi opinión en Google</a>
+      </div>
+      <div class="rev-qr">
+        <img src="qr-opiniones.png" alt="Código QR para dejar una opinión de Muñoz Construcción en Seco en Google" width="150" height="150">
+        <span>Escaneá con el celular</span>
+      </div>
     </div>
   </div>
 </section>
