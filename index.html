@@ -675,7 +675,7 @@ function calc(){
     const por=C(a/WPC.ancho-1e-9), filas=Math.max(1,C(b/WPC.largo-1e-9));
     add(C(por*filas*1.05),'u',`Wall panel WPC Nogal Munich (${fmt(WPC.largo)} m × ${fmt(WPC.ancho*100)} cm)`,`${por} tablas a lo ancho${filas>1?` × ${filas} filas`:''} · con un 5 % de margen`);
     add(+(E.neta).toFixed(2),'m²','Superficie a revestir',R_AB(E));
-    add(r50(C(por*filas*1.05)*8),'u','Tornillo T2','Para fijar a la estructura · unos 8 por tabla');
+    out.push({q:0,u:'txt',n:'Clips de fijación o adhesivo de montaje',d:'Según cómo se coloque: te confirmamos la cantidad'});
   } else if(t==='marmol'){
     add(C(E.neta/(MAR.l*MAR.a)*1.10),'u',`Placa efecto símil mármol (${fmt(MAR.a)} × ${fmt(MAR.l)} m)`,'Con un 10 % de margen para cortes');
     add(+(E.neta).toFixed(2),'m²','Superficie a revestir',R_AB(E));
@@ -758,10 +758,10 @@ function update(){
   if(R.ab>0) md.push(`Descontamos ${fmt(R.ab)} m² de aberturas`);
   if(MODO==='m2'&&t!=='pvc') md.push(ceil?'Medidas estimadas a partir de los m²':'Largo estimado a partir de los m²');
   $('medidas').innerHTML=md.map(x=>'<span>'+x+'</span>').join('');
-  $('resBody').innerHTML=R.out.length?R.out.map(o=>`<tr><td>${o.n}${o.d?`<small>${o.d}</small>`:''}</td><td class="q">${o.u==='$'?'$ '+fmt(o.q):fmt(o.q)+' '+o.u}</td></tr>`).join(''):'<tr><td>Cargá las medidas para ver la lista.</td></tr>';
+  $('resBody').innerHTML=R.out.length?R.out.map(o=>`<tr><td>${o.n}${o.d?`<small>${o.d}</small>`:''}</td><td class="q">${o.u==='txt'?'A confirmar':o.u==='$'?'$ '+fmt(o.q):fmt(o.q)+' '+o.u}</td></tr>`).join(''):'<tr><td>Cargá las medidas para ver la lista.</td></tr>';
   const linea=(MODO==='m2'&&t!=='pvc')?`${fmt(R.area)} m² (cargué la superficie)`:`${fmt(R.a)} × ${fmt(R.b)} m (${fmt(R.area)} m²)`;
   const abm=R.ab>0?`\nPuertas: ${+$('puertas').value||0} · Ventanas: ${+$('ventanas').value||0} (superficie neta ${fmt(R.neta)} m²)`:'';
-  const msg=`Hola Muñoz! Usé la calculadora de la web.\n${NOMBRE[t]}: ${linea}${abm}\n\n`+R.out.map(o=>`• ${o.u==='$'?'$ '+fmt(o.q):fmt(o.q)+' '+o.u} — ${o.n}${o.u==='tiras'?` (${o.d})`:''}`).join('\n')+`\n\n¿Me pasan presupuesto?`;
+  const msg=`Hola Muñoz! Usé la calculadora de la web.\n${NOMBRE[t]}: ${linea}${abm}\n\n`+R.out.map(o=>`• ${o.u==='txt'?'A confirmar':o.u==='$'?'$ '+fmt(o.q):fmt(o.q)+' '+o.u} — ${o.n}${o.u==='tiras'?` (${o.d})`:''}`).join('\n')+`\n\n¿Me pasan presupuesto?`;
   $('waBtn').href='https://wa.me/5492364242318?text='+encodeURIComponent(msg);
 }
 ['tipo','m1','m2','sup','altoM2','puertas','ventanas','placa','perfil','pvcT','tiraL'].forEach(id=>$(id).addEventListener('input',update));
