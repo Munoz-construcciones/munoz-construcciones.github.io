@@ -346,6 +346,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
             <option value="pvc">Cielorraso de PVC</option>
             <option value="desm">Cielorraso desmontable 60 × 60</option>
             <option value="steel">Muro de steel frame</option>
+            <option value="wpc">Wall panel WPC Nogal Munich</option>
+            <option value="marmol">Revestimiento efecto símil mármol</option>
           </select></div>
         <details class="help" id="help">
           <summary>¿Cómo tomo las medidas?</summary>
@@ -577,6 +579,9 @@ const MATS = {
   "Masillas y terminación": [
     ["Anclaflex","Masilla Ancla Plus","Balde de 32 kg"],["Anclaflex","Masilla Ancla secado rápido","Bolsa de 20 kg"],
     ["—","Cinta tramada","Rollo de 45 m"],["—","Moldura AT 35","Largo 2 m"]],
+  "Revestimientos decorativos": [
+    ["—","Wall panel WPC Nogal Munich","Tablas símil madera para paredes interiores"],
+    ["—","Revestimiento efecto símil mármol","Placas para paredes con terminación de mármol"]],
   "Fijaciones": [
     ["—","Tornillo T1 punta aguja / mecha","Perfil con perfil"],["—","Tornillo T2 punta aguja / mecha","Placa con perfil"],
     ["—","Tornillo Fix 8 × 1¾","Con tarugo, para amurar"],["—","Tarugo 6 con tope",""]]
@@ -600,6 +605,9 @@ const C=Math.ceil, r50=n=>Math.max(50,C(n/50)*50);
 const PLACA={std125:'Placa Knauf estándar 12,5 mm (1,20 × 2,40)',std95:'Placa Knauf estándar 9,5 mm (1,20 × 2,40)',rh:'Placa Knauf RH 12,5 mm (1,20 × 2,40)'};
 const fmt=n=>n.toLocaleString('es-AR',{maximumFractionDigits:2});
 
+/* Medidas de piezas de los revestimientos decorativos: confirmar con el proveedor */
+const WPC={largo:2.90,ancho:0.16}, MAR={a:1.22,l:2.44};
+const R_AB=E=>E.ab>0?`Ya descontamos ${fmt(E.ab)} m² de aberturas`:'';
 function setTipo(t){$('tipo').value=t;update()}
 function calc(){
   const t=$('tipo').value, E=entrada(t), a=E.a, b=E.b;
@@ -663,6 +671,13 @@ function calc(){
     add(r50(n*8),'u','Tornillo T1 punta mecha','Uniones de perfiles');
     add(C(area*0.9/32),'balde','Masilla Ancla Plus 32 kg','Cara interior');
     add(C(area*1.5/45),'rollo','Cinta tramada 45 m','');
+  } else if(t==='wpc'){
+    const por=C(a/WPC.ancho-1e-9), filas=Math.max(1,C(b/WPC.largo-1e-9));
+    add(C(por*filas*1.05),'u',`Wall panel WPC Nogal Munich (${fmt(WPC.largo)} m × ${fmt(WPC.ancho*100)} cm)`,`${por} tablas a lo ancho${filas>1?` × ${filas} filas`:''} · con un 5 % de margen`);
+    add(+(E.neta).toFixed(2),'m²','Superficie a revestir',R_AB(E));
+  } else if(t==='marmol'){
+    add(C(E.neta/(MAR.l*MAR.a)*1.10),'u',`Placa efecto símil mármol (${fmt(MAR.a)} × ${fmt(MAR.l)} m)`,'Con un 10 % de margen para cortes');
+    add(+(E.neta).toFixed(2),'m²','Superficie a revestir',R_AB(E));
   }
   return {t,a,b,area,neta:E.neta,ab:E.ab,out};
 }
@@ -688,7 +703,7 @@ function planTiras(a,b,modo,ancho){
 }
 /* ---------- AYUDA PARA MEDIR ---------- */
 let MODO='med';
-const PARED=['tabique','revest','steel'], TECHO=['cielo','pvc','desm'];
+const PARED=['tabique','revest','steel','wpc','marmol'], TECHO=['cielo','pvc','desm'];
 function setModo(m){MODO=m;$('modoMed').classList.toggle('on',m==='med');$('modoM2').classList.toggle('on',m==='m2');update()}
 function entrada(t){
   let a,b;
@@ -709,13 +724,15 @@ const DIB={
 const AYUDA={
  tabique:{d:'pared',pasos:['Medí el <b>largo</b> de la pared nueva, de punta a punta, sobre el piso.','Medí el <b>alto</b>, del piso al techo.','Si son varias paredes, sumá los largos y cargá el total.','Si la pared lleva puertas o ventanas, anotalas abajo y las descontamos.']},
  revest:{d:'pared',pasos:['Medí el <b>largo</b> de la pared que querés revestir.','Medí el <b>alto</b>, del piso al techo.','Si son varias paredes, sumá los largos y cargá el total.','Contá las puertas y ventanas de esa pared para descontarlas.']},
+ wpc:{d:'pared',pasos:['Medí el <b>largo</b> de la pared que querés revestir, de punta a punta.','Medí el <b>alto</b>, del piso al techo.','Si son varias paredes, sumá los largos y cargá el total.','Contá puertas y ventanas para descontarlas.']},
+ marmol:{d:'pared',pasos:['Medí el <b>largo</b> de la pared que querés revestir.','Medí el <b>alto</b>, del piso al techo.','Si es solo un sector (por ejemplo, detrás de la tele o de la cama), medí solo ese sector.','Contá puertas y ventanas para descontarlas.']},
  steel:{d:'pared',pasos:['Medí el <b>largo</b> del muro que querés levantar.','Medí el <b>alto</b> que va a tener.','Si es una habitación entera, sumá el largo de todos los muros.','Contá puertas y ventanas para descontarlas.']},
  cielo:{d:'techo',pasos:['El cielorraso mide lo mismo que el <b>piso</b> del ambiente: medilo en el piso, es más fácil.','Medí el <b>largo</b> y el <b>ancho</b> de la habitación, de pared a pared.','Si el ambiente tiene forma de L, dividilo en dos rectángulos y calculá cada uno.']},
  pvc:{d:'techo',pasos:['El cielorraso mide lo mismo que el <b>piso</b> del ambiente: medilo en el piso.','Medí el <b>largo</b> y el <b>ancho</b>, de pared a pared.','Con esas medidas calculamos cuántas tiras y de qué largo te conviene, para que sobre lo menos posible.']},
  desm:{d:'techo',pasos:['El cielorraso mide lo mismo que el <b>piso</b> del ambiente: medilo en el piso.','Medí el <b>largo</b> y el <b>ancho</b>, de pared a pared.','Si el ambiente tiene forma de L, dividilo en dos rectángulos.']}
 };
 const GLOSARIO=`<div class="gloss"><div><b>Metro lineal (ml):</b> solo el largo. Se usa para perfiles, molduras y perimetrales. Ej.: una pared de 4 m de largo = 4 ml.</div><div><b>Metro cuadrado (m²):</b> largo × alto (pared) o largo × ancho (techo). Se usa para placas y PVC. Ej.: 4 m × 2,60 m = 10,4 m².</div><div>No hace falta que hagas la cuenta: cargá las medidas y la calculadora lo resuelve.</div></div>`;
-const NOMBRE={tabique:'Tabique',revest:'Revestimiento sobre pared',cielo:'Cielorraso de placa',pvc:'Cielorraso de PVC',desm:'Cielorraso desmontable',steel:'Muro de steel frame'};
+const NOMBRE={tabique:'Tabique',revest:'Revestimiento sobre pared',cielo:'Cielorraso de placa',pvc:'Cielorraso de PVC',desm:'Cielorraso desmontable',steel:'Muro de steel frame',wpc:'Wall panel WPC Nogal Munich',marmol:'Revestimiento efecto símil mármol'};
 function update(){
   const t=$('tipo').value, ceil=['cielo','pvc','desm'].includes(t);
   $('l1').textContent=ceil?'Largo del ambiente (m)':'Largo de la pared (m)';
