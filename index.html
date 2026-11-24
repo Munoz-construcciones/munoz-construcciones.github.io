@@ -675,9 +675,11 @@ function calc(){
     const por=C(a/WPC.ancho-1e-9), filas=Math.max(1,C(b/WPC.largo-1e-9));
     add(C(por*filas*1.05),'u',`Wall panel WPC Nogal Munich (${fmt(WPC.largo)} m × ${fmt(WPC.ancho*100)} cm)`,`${por} tablas a lo ancho${filas>1?` × ${filas} filas`:''} · con un 5 % de margen`);
     add(+(E.neta).toFixed(2),'m²','Superficie a revestir',R_AB(E));
+    add(r50(C(por*filas*1.05)*8),'u','Tornillo T2','Para fijar a la estructura · unos 8 por tabla');
   } else if(t==='marmol'){
     add(C(E.neta/(MAR.l*MAR.a)*1.10),'u',`Placa efecto símil mármol (${fmt(MAR.a)} × ${fmt(MAR.l)} m)`,'Con un 10 % de margen para cortes');
     add(+(E.neta).toFixed(2),'m²','Superficie a revestir',R_AB(E));
+    add(r50(E.neta*25),'u','Tornillo T2','Para fijar a la estructura · unos 25 por m²');
   }
   return {t,a,b,area,neta:E.neta,ab:E.ab,out};
 }
