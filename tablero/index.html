@@ -2,7 +2,11 @@
 <html lang="es-AR">
 <head>
 <meta name="robots" content="noindex,nofollow">
-<script src="nube.js"></script>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1e2629">
+<link rel="icon" href="icono-192.png">
+<link rel="apple-touch-icon" href="icono-192.png">
+<script src="nube.js?v=3"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Muñoz · Tablero de marca</title>
@@ -417,7 +421,7 @@ function renderAg(){
 }
 let tm=null;
 function save(d){try{localStorage.setItem('munozAgenda',JSON.stringify(S))}catch(_){}
-  if(db&&d){clearTimeout(tm);const v=get(d);tm=setTimeout(()=>{db.doc('agenda/'+d).set(v).then(()=>$('st').textContent='Guardado en la nube ✓').catch(()=>$('st').textContent='No se pudo guardar en la nube; queda en este navegador.')},500)}}
+  if(db&&d){clearTimeout(tm);const v=get(d);tm=setTimeout(()=>{db.doc('agenda/'+d).set(v).then(()=>$('st').textContent='Guardado en la nube ✓').catch(e=>$('st').textContent='No se pudo guardar en la nube ('+(e&&e.message||'error')+'); queda en este navegador.')},500)}}
 const ag=$('agenda');
 ag.addEventListener('click',e=>{const t=e.target.closest('[data-tg]');if(t){const d=t.dataset.tg;open.has(d)?open.delete(d):open.add(d);renderAg();return}
   const b=e.target.closest('[data-addb]');if(b){const d=b.dataset.addb;const inp=ag.querySelector(`[data-add="${d}"]`);const v=inp.value.trim();if(v){get(d).extra.push(v);save(d);renderAg()}}});
@@ -429,8 +433,9 @@ renderAg();
   db.doc('pro/estado').onSnapshot(x=>{const v=x&&x.data&&x.data();if(v){PS=v;if(location.hash==='#crecer')show('crecer')}},()=>{});
   const to=setTimeout(()=>{$('st').textContent='Guardando en este navegador.'},10000);
   db.collection('agenda').onSnapshot(snap=>{clearTimeout(to);snap.docs.forEach(x=>{const v=x.data();S[x.id]={done:v.done||[],note:v.note||'',extra:v.extra||[]}});
-    if(!document.activeElement||!document.activeElement.dataset||!document.activeElement.dataset.note)renderAg();$('st').textContent='Guardado en la nube: lo ven todos los que tienen el link ✓'},()=>{$('st').textContent='Guardando en este navegador.'})}catch(_){}})();
+    if(!document.activeElement||!document.activeElement.dataset||!document.activeElement.dataset.note)renderAg();$('st').textContent='Guardado en la nube: lo ven todos los que tienen el link ✓'},e=>{$('st').textContent='No se pudo conectar con la planilla ('+(e&&e.message||'error')+'). Se guarda en este navegador.'})}catch(_){}})();
 }
 </script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})</script>
 </body>
 </html>

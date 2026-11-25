@@ -5,32 +5,34 @@ window.NUBE_URL = 'https://script.google.com/macros/s/AKfycbx1HEinuhvR9OKe94Y2Dr
 window.NUBE_CLAVE = 'munoz-tablero-2026';
 (function(){
   const URL_ = () => window.NUBE_URL;
-  let cache = null, subs = [], timer = null;
+  let cache = null, subs = [], errs = [], timer = null;
+  window.NUBE_ERROR = '';
   async function bajar(){
     const r = await fetch(URL_() + '?k=' + encodeURIComponent(window.NUBE_CLAVE) + '&t=' + Date.now());
     const j = await r.json(); if (j.error) throw new Error(j.error);
     cache = {}; (j.docs||[]).forEach(d => cache[d.path] = d.data);
-    subs.forEach(s => s());
+    window.NUBE_ERROR = ''; subs.forEach(s => s());
   }
   async function subir(path, data, del){
     const r = await fetch(URL_(), {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({k:window.NUBE_CLAVE, path, data, del:!!del})});
     const j = await r.json(); if (j.error) throw new Error(j.error);
     if (cache) { if (del) delete cache[path]; else cache[path] = data; subs.forEach(s => s()); }
   }
-  function arrancar(){ if (!timer) { bajar().catch(()=>{}); timer = setInterval(() => bajar().catch(()=>{}), 20000); } }
+  const fallo = (e) => { window.NUBE_ERROR = String(e && e.message || e); errs.forEach(f => f(e)); };
+  function arrancar(){ if (!timer) { bajar().catch(fallo); timer = setInterval(() => bajar().catch(fallo), 20000); } }
   const snapDoc = (path) => ({ id: path.split('/').pop(), data: () => cache && cache[path] });
   function doc(path){
     return {
       set: (v) => subir(path, v),
       update: (v) => subir(path, Object.assign({}, cache && cache[path], v)),
       delete: () => subir(path, null, true),
-      onSnapshot: (cb, err) => { arrancar(); const f = () => cb(snapDoc(path)); subs.push(f); if (cache) f(); return () => subs = subs.filter(x => x !== f); }
+      onSnapshot: (cb, err) => { arrancar(); if (err) errs.push(err); const f = () => cb(snapDoc(path)); subs.push(f); if (cache) f(); return () => subs = subs.filter(x => x !== f); }
     };
   }
   function collection(col){
     return {
       doc: (id) => doc(col + '/' + id),
-      onSnapshot: (cb, err) => { arrancar(); const f = () => { const docs = Object.keys(cache||{}).filter(p => p.startsWith(col + '/') && p.split('/').length === col.split('/').length + 1).map(snapDoc); cb({docs}); }; subs.push(f); if (cache) f(); return () => subs = subs.filter(x => x !== f); }
+      onSnapshot: (cb, err) => { arrancar(); if (err) errs.push(err); const f = () => { const docs = Object.keys(cache||{}).filter(p => p.startsWith(col + '/') && p.split('/').length === col.split('/').length + 1).map(snapDoc); cb({docs}); }; subs.push(f); if (cache) f(); return () => subs = subs.filter(x => x !== f); }
     };
   }
   const db = { doc, collection };

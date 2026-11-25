@@ -2,8 +2,12 @@
 <html lang="es-AR">
 <head>
 <meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1e2629">
+<link rel="icon" href="icono-192.png">
+<link rel="apple-touch-icon" href="icono-192.png">
 <script>window.NUBE_LOCAL=true</script>
-<script src="nube.js"></script>
+<script src="nube.js?v=3"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Presupuestador Muñoz</title>
@@ -416,5 +420,6 @@ const ro=new ResizeObserver(fit);ro.observe($('box'));ro.observe($('sheet'));
 renderItems();render();fit();
 }
 </script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})</script>
 </body>
 </html>
