@@ -641,10 +641,9 @@ function calc(){
   } else if(t==='pvc'){
     const barb=$('pvcT').value==='barb';
     const nom=barb?'Tira PVC Barbieri 10 mm':'Tira PVC importado 7 mm';
-    const plan=planTiras(a,b,$('tiraL').value,0.20);
-    Object.keys(plan.cant).map(Number).sort((x,y)=>y-x).forEach(L=>{
-      add(plan.cant[L],'tiras',`${nom} de ${L} m`, `Tiras a lo largo de ${fmt(plan.run)} m · ${plan.filas} filas`);
-    });
+    const plan=planCorte(a,b,$('tiraL').value,0.20);
+    if(plan.error) out.push({q:0,u:'txt',n:'Revisá el largo de tira elegido',d:plan.error});
+    plan.lineas.forEach(l=>add(l.tiras,'tiras',`${nom} de ${l.L} m`,l.d));
     add(+plan.m2.toFixed(2),'m²','Total de PVC',`Sobrante aprox.: ${fmt(+plan.sobra.toFixed(2))} m de tira`);
     if(!barb&&plan.m2>0) add(Math.round(plan.m2*8999),'$','Precio de referencia del PVC importado',`${fmt(+plan.m2.toFixed(2))} m² × $8.999 · solo las tiras, sujeto a cambios`);
     add(C(per/3*1.05),'u',barb?'Perimetral F PVC Barbieri 10 mm (3 m)':'Perimetral PVC (3 m)','');
@@ -714,6 +713,27 @@ function planTiras(a,b,modo,ancho){
   const x=planUnSentido(a,b,modo,ancho), y=planUnSentido(b,a,modo,ancho);
   return y.sobra<x.sobra-1e-9?y:x;
 }
+/* Cielorraso de PVC: cada tira se corta a la medida del ANCHO del ambiente
+   y las piezas se colocan una al lado de la otra a lo LARGO (cada 20 cm). */
+function planCorte(largo,ancho,modo,anchoTira){
+  const vacio={lineas:[],m2:0,sobra:0};
+  if(!(largo>0&&ancho>0))return vacio;
+  const piezas=C(largo/anchoTira-1e-9);
+  if(ancho>6+1e-9){ // ambiente más ancho que la tira más larga: va con unión
+    const p=piezasFila(ancho,modo==='auto'?'auto':modo), cant={};
+    p.forEach(L=>cant[L]=(cant[L]||0)+piezas);
+    const tot=p.reduce((x,y)=>x+y,0)*piezas;
+    return {lineas:Object.keys(cant).map(Number).sort((x,y)=>y-x).map(L=>({L,tiras:cant[L],d:`El ancho supera los 6 m: cada fila lleva una unión · ${piezas} filas`})),m2:tot*anchoTira,sobra:tot-ancho*piezas};
+  }
+  const opc=(modo==='auto'?LARGOS:[+modo]).filter(L=>L>=ancho-1e-9).map(L=>{
+    const k=Math.floor(L/ancho+1e-9), tiras=C(piezas/k), sobra=tiras*L-piezas*ancho;
+    return {L,k,tiras,sobra};
+  });
+  if(!opc.length) return {...vacio,error:`Con tiras de ${modo} m no llegás a cubrir ${fmt(ancho)} m de ancho. Elegí un largo mayor o "Automático".`};
+  opc.sort((x,y)=>x.sobra-y.sobra||x.tiras-y.tiras);
+  const o=opc[0];
+  return {lineas:[{L:o.L,tiras:o.tiras,d:`De cada tira ${o.k>1?'salen':'sale'} ${o.k} pieza${o.k>1?'s':''} de ${fmt(ancho)} m · ${piezas} piezas en total`}],m2:o.tiras*o.L*anchoTira,sobra:o.sobra};
+}
 /* ---------- AYUDA PARA MEDIR ---------- */
 let MODO='med';
 const PARED=['tabique','revest','steel','wpc','marmol'], TECHO=['cielo','pvc','desm'];
@@ -734,6 +754,7 @@ const DIB={
  pared:`<svg viewBox="0 0 300 150"><rect x="40" y="20" width="220" height="100" fill="#ffeee5" stroke="#1e2629" stroke-width="2"/><path d="M40 132h220" stroke="#fc6320" stroke-width="2"/><path d="M40 127v10M260 127v10" stroke="#fc6320" stroke-width="2"/><text x="150" y="146" text-anchor="middle" font-family="Archivo" font-size="12" fill="#d94f12">LARGO: de punta a punta</text><path d="M24 20v100" stroke="#fc6320" stroke-width="2"/><path d="M19 20h10M19 120h10" stroke="#fc6320" stroke-width="2"/><text x="14" y="74" text-anchor="middle" font-family="Archivo" font-size="12" fill="#d94f12" transform="rotate(-90 14 74)">ALTO</text><rect x="70" y="50" width="34" height="70" fill="#fff" stroke="#69707a" stroke-dasharray="3 3"/><text x="87" y="90" text-anchor="middle" font-size="9" fill="#69707a">puerta</text></svg>`,
  techo:`<svg viewBox="0 0 300 160"><path d="M60 40h180l-40 80H20z" fill="#ffeee5" stroke="#1e2629" stroke-width="2"/><text x="130" y="86" text-anchor="middle" font-family="Archivo" font-size="12" fill="#1e2629">piso del ambiente</text><path d="M20 138h180" stroke="#fc6320" stroke-width="2"/><text x="110" y="154" text-anchor="middle" font-family="Archivo" font-size="12" fill="#d94f12">LARGO</text><path d="M214 124l40-80" stroke="#fc6320" stroke-width="2"/><text x="262" y="92" font-family="Archivo" font-size="12" fill="#d94f12">ANCHO</text></svg>`
 };
+DIB.pvc=`<svg viewBox="0 0 300 170"><rect x="40" y="20" width="220" height="110" fill="#ffeee5" stroke="#1e2629" stroke-width="2"/>${Array.from({length:10},(_,i)=>`<rect x="${44+i*21.5}" y="24" width="18" height="102" fill="#fff" stroke="#fc6320" stroke-width="1"/>`).join('')}<path d="M40 144h220" stroke="#fc6320" stroke-width="2"/><path d="M40 139v10M260 139v10" stroke="#fc6320" stroke-width="2"/><text x="150" y="162" text-anchor="middle" font-family="Archivo" font-size="12" fill="#d94f12">LARGO: las tiras se suman una al lado de otra</text><path d="M24 20v110" stroke="#fc6320" stroke-width="2"/><path d="M19 20h10M19 130h10" stroke="#fc6320" stroke-width="2"/><text x="14" y="75" text-anchor="middle" font-family="Archivo" font-size="12" fill="#d94f12" transform="rotate(-90 14 75)">ANCHO = corte</text></svg>`;
 const AYUDA={
  tabique:{d:'pared',pasos:['Medí el <b>largo</b> de la pared nueva, de punta a punta, sobre el piso.','Medí el <b>alto</b>, del piso al techo.','Si son varias paredes, sumá los largos y cargá el total.','Si la pared lleva puertas o ventanas, anotalas abajo y las descontamos.']},
  revest:{d:'pared',pasos:['Medí el <b>largo</b> de la pared que querés revestir.','Medí el <b>alto</b>, del piso al techo.','Si son varias paredes, sumá los largos y cargá el total.','Contá las puertas y ventanas de esa pared para descontarlas.']},
@@ -741,7 +762,7 @@ const AYUDA={
  marmol:{d:'pared',pasos:['Medí el <b>largo</b> de la pared que querés revestir.','Medí el <b>alto</b>, del piso al techo.','Si es solo un sector (por ejemplo, detrás de la tele o de la cama), medí solo ese sector.','Contá puertas y ventanas para descontarlas.']},
  steel:{d:'pared',pasos:['Medí el <b>largo</b> del muro que querés levantar.','Medí el <b>alto</b> que va a tener.','Si es una habitación entera, sumá el largo de todos los muros.','Contá puertas y ventanas para descontarlas.']},
  cielo:{d:'techo',pasos:['El cielorraso mide lo mismo que el <b>piso</b> del ambiente: medilo en el piso, es más fácil.','Medí el <b>largo</b> y el <b>ancho</b> de la habitación, de pared a pared.','Si el ambiente tiene forma de L, dividilo en dos rectángulos y calculá cada uno.']},
- pvc:{d:'techo',pasos:['El cielorraso mide lo mismo que el <b>piso</b> del ambiente: medilo en el piso.','Medí el <b>largo</b> y el <b>ancho</b>, de pared a pared.','Con esas medidas calculamos cuántas tiras y de qué largo te conviene, para que sobre lo menos posible.']},
+ pvc:{d:'pvc',pasos:['Medí el ambiente en el <b>piso</b>, de pared a pared.','<b>Ancho:</b> es la medida a la que se <b>corta cada tira</b>. Las tiras se colocan de pared a pared en este sentido (conviene el lado más corto).','<b>Largo:</b> es el lado en el que las tiras se van poniendo <b>una al lado de la otra</b>, cada 20 cm. Sirve para saber cuántas piezas hacen falta.','Con eso calculamos cuántas piezas salen de cada tira (por ejemplo, de una tira de 6 m salen 2 piezas de 3 m) y qué largo de tira te conviene para que sobre lo menos posible.']},
  desm:{d:'techo',pasos:['El cielorraso mide lo mismo que el <b>piso</b> del ambiente: medilo en el piso.','Medí el <b>largo</b> y el <b>ancho</b>, de pared a pared.','Si el ambiente tiene forma de L, dividilo en dos rectángulos.']}
 };
 const GLOSARIO=`<div class="gloss"><div><b>Metro lineal (ml):</b> solo el largo. Se usa para perfiles, molduras y perimetrales. Ej.: una pared de 4 m de largo = 4 ml.</div><div><b>Metro cuadrado (m²):</b> largo × alto (pared) o largo × ancho (techo). Se usa para placas y PVC. Ej.: 4 m × 2,60 m = 10,4 m².</div><div>No hace falta que hagas la cuenta: cargá las medidas y la calculadora lo resuelve.</div></div>`;
@@ -750,8 +771,8 @@ function update(){
   const t=$('tipo').value, ceil=['cielo','pvc','desm'].includes(t);
   $('l1').textContent=ceil?'Largo del ambiente (m)':'Largo de la pared (m)';
   $('l2').textContent=ceil?'Ancho del ambiente (m)':'Alto de la pared (m)';
-  $('h1').textContent=ceil?'De pared a pared':'De punta a punta';
-  $('h2').textContent=ceil?'De pared a pared':'Del piso al techo';
+  $('h1').textContent=t==='pvc'?'Las tiras se colocan una al lado de la otra en este sentido':ceil?'De pared a pared':'De punta a punta';
+  $('h2').textContent=t==='pvc'?'Cada tira se corta a esta medida':ceil?'De pared a pared':'Del piso al techo';
   if(t==='pvc'&&MODO==='m2'){MODO='med';}
   $('fModo').hidden=t==='pvc';
   $('modoMed').classList.toggle('on',MODO==='med');$('modoM2').classList.toggle('on',MODO==='m2');
