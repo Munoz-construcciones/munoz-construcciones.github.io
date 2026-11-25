@@ -273,7 +273,37 @@ function normalizar(r){
 function leerLocal(text){
   const ESNUM=/^\$?\s*-?(\d{1,3}(\.\d{3})+(,\d+)?|\d+([.,]\d+)?)\s*(u|un|uds?|m2|m²|ml|m|kg)?\.?$/i;
   const out=[];
+  let csv=false;
+  const csvSplit=l=>{const r=[];let cur='',q=false;for(const ch of l){if(ch==='"'){q=!q}else if(ch===','&&!q){r.push(cur.trim());cur=''}else cur+=ch}r.push(cur.trim());return r};
+  const partir=l=>{if(csv)return csvSplit(l);let c=l.split(/\t|\s{2,}|\s\|\s|\|/).map(x=>x.trim()).filter(Boolean);if(c.length<2&&l.includes(',')&&!/\d,\d/.test(l)){const k=csvSplit(l);if(k.some(x=>/^cant/i.test(x)))csv=true;c=k}return c};
+  /* Encabezado: si hay una columna CANT/CANTIDAD, se usa esa como cantidad y se ignora CÓDIGO */
+  let H=null;
   for(const raw of text.split(/\r?\n/)){
+    const c=partir(raw.trim()).map(x=>x.toLowerCase());
+    if(c.length>=2&&c.some(x=>/^cant/.test(x))){
+      H={n:c.length,cant:c.findIndex(x=>/^cant/.test(x)),cod:c.findIndex(x=>/^c[oó]d/.test(x)),desc:c.findIndex(x=>/desc|detalle|art[ií]culo|producto|material/.test(x)),
+         precio:c.findIndex(x=>/precio|unit|^p\.?\s?u/.test(x)),sub:c.findIndex(x=>/subtotal|importe|^total/.test(x))};
+      break;
+    }
+  }
+  let enTabla=false;
+  for(const raw of text.split(/\r?\n/)){
+    if(H){
+      const c=partir(raw.trim());
+      if(!enTabla){if(c.some(x=>/^cant/i.test(x)))enTabla=true;continue}
+      if(!c.length)continue;
+      if(/^(sub)?total|^iva/i.test(c[0])||/^(sub)?total|^iva/i.test(c[H.cod>=0&&H.cod<c.length?Math.min(1,c.length-1):0]))continue;
+      let cells=c.slice();
+      // si falta alguna columna vacía, alinear desde la derecha para cant/precio/subtotal
+      const get=i=>{if(i<0)return undefined;if(cells.length===H.n)return cells[i];const fromEnd=H.n-1-i;return fromEnd>=0&&fromEnd<cells.length&&i>Math.max(H.desc,H.cod)?cells[cells.length-1-fromEnd]:cells[i]};
+      let d=H.desc>=0?get(H.desc):cells.filter((x,i)=>i!==H.cod&&!ESNUM.test(x)).join(' ');
+      if(cells.length!==H.n&&H.desc>=0){const nonNum=cells.filter((x,i)=>!(i===0&&H.cod===0)&&!ESNUM.test(x));d=nonNum.join(' ')||d}
+      if(!d||d.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ]/g,'').length<3)continue;
+      const cant=num(get(H.cant)),pre=H.precio>=0?num(get(H.precio)):0,sub=H.sub>=0?num(get(H.sub)):0;
+      let pu=pre;if(!pu&&sub&&cant)pu=sub/cant;
+      out.push({d:d.trim(),c:cant||1,p:Math.round((pu||0)*100)/100});
+      continue;
+    }
     const l=raw.replace(/\[[^\]]*\]/g,' ').trim();
     if(!l||/^(total|subtotal|iva|importe total|descripci|detalle|cant\b|cantidad)/i.test(l.replace(/^[•\-\s]+/,''))||/superficie de la obra|total de (placa|osb|pvc)|superficie a revestir/i.test(l))continue;
     let cells=l.split(/\t|\s{2,}|\s\|\s|\|/).map(x=>x.trim()).filter(Boolean);
@@ -331,6 +361,7 @@ Respondé SOLO con JSON, sin texto antes ni después, con esta forma exacta:
 Reglas:
 - tipo: "materiales" si son solo materiales; "mano_de_obra" si solo cobra trabajo (colocación, instalación, armado) sin materiales; "ambos" si incluye materiales y trabajo.
 - Un objeto por renglón. Copiá la descripción tal cual (marca, medida, espesor).
+- Si hay una columna de CÓDIGO (Cód., Código), ignorala: no va en la descripción ni es la cantidad. La cantidad es la columna CANT o CANTIDAD, tal cual figura.
 - cantidad y precio_unitario como números, sin $ ni puntos de miles (ej. 18500.5).
 - Si un renglón tiene cantidad y subtotal pero no precio unitario, calculá precio_unitario = subtotal / cantidad.
 - Si no hay precios (por ejemplo, una lista de materiales), dejá precio_unitario en 0 igual: no omitas el renglón.
