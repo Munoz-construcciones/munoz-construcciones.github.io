@@ -1,7 +1,7 @@
 /* Puente para usar el tablero fuera de Claude.
    NUBE_URL: dirección de la aplicación web de Google Apps Script (planilla compartida).
    Mientras esté vacía, todo se guarda solo en esta computadora. */
-window.NUBE_URL = '';
+window.NUBE_URL = 'https://script.google.com/macros/s/AKfycbx1HEinuhvR9OKe94Y2DrTGL3aBhRP90ehS4moYhg-DsaKZSC0uZMU0RqD0pyNq3g/exec';
 window.NUBE_CLAVE = 'munoz-tablero-2026';
 (function(){
   const URL_ = () => window.NUBE_URL;
