@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<script>window.NUBE_LOCAL=true</script>
+<script src="nube.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presupuestador Muñoz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: herramienta de mostrador, clara y rápida
+   IDEA: la hoja de presupuesto impresa de Muñoz, con su membrete
+   PICTURE: la hoja A4 en vivo, grande, a la derecha
+   COLOUR and TYPE: grafito #1e2629, naranja #fc6320, hueso #f6f5f2 · Archivo + Inter
+   LAYOUT: pasos a la izquierda, hoja a la derecha; en celular, pasos y luego hoja */
+:root{color-scheme:light dark;--bg:light-dark(#f6f5f2,#14181c);--card:light-dark(#fff,#1e2629);--ink:light-dark(#1e2629,#eef0f2);--ink2:light-dark(#3a4048,#c3c8ce);--mut:light-dark(#69707a,#9aa1a9);--line:light-dark(#e3e5e8,#2f373c);--acc:#fc6320;--accd:#d94f12;--gra:#1e2629}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Archivo,sans-serif;line-height:1.1;margin:0}
+.top{background:var(--gra);color:#fff;padding:16px max(4vw,16px);display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:6px solid transparent;border-image:repeating-linear-gradient(-45deg,#fc6320 0 14px,#1e2629 14px 28px) 6}
+.top img{height:40px}.top h1{font-size:22px;font-weight:700}
+.wrap{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:24px;padding:24px max(4vw,16px);max-width:1400px;margin:0 auto;align-items:start}
+@media(max-width:980px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+.card h2{font-size:18px;margin-bottom:10px;display:flex;gap:10px;align-items:center}
+.n{width:26px;height:26px;border-radius:50%;background:var(--acc);color:#1e2629;display:grid;place-items:center;font:800 14px Archivo;flex:none}
+p.s{font-size:14px;color:var(--ink2);margin:0 0 10px}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:20px;text-align:center;cursor:pointer;color:var(--ink2);font-size:15px}
+.drop.on{border-color:var(--acc);background:light-dark(#fff4ec,#2a2420)}
+.drop b{color:var(--ink)}
+label{display:block;font:600 13px Inter;color:var(--ink2);margin:10px 0 4px}
+input,textarea,select{width:100%;font:16px Inter;padding:9px 10px;border:1px solid light-dark(#cfd3d8,#3a4348);border-radius:8px;background:light-dark(#fff,#14181c);color:var(--ink)}
+input:focus,textarea:focus{outline:2px solid var(--acc);border-color:var(--acc)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border-radius:8px;border:2px solid transparent;font:700 15px Archivo;cursor:pointer;background:var(--acc);color:#1e2629}
+.btn.g{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.msg{font-size:14px;margin-top:10px;color:var(--ink2)}.msg.err{color:#c0392b}
+.items{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+.items td{padding:3px 2px;vertical-align:top}
+.items input{padding:7px 6px;font-size:14px}
+.items .x{background:none;border:0;color:var(--mut);font-size:20px;cursor:pointer;width:32px;height:36px}
+.ih{font:600 12px Inter;color:var(--mut)}
+/* hoja */
+.sheetbox{overflow:hidden;padding-bottom:8px}#scaler{transform-origin:top left;width:794px}
+.sheet{width:794px;min-height:1123px;background:#fff;color:#1e2629;box-shadow:0 10px 40px rgba(0,0,0,.18);display:flex;flex-direction:column;font:13px/1.45 Inter,sans-serif}
+.mb{background:#1e2629;color:#fff;padding:26px 40px 22px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.mb img{height:66px}
+.mb .dat{text-align:right;font-size:11.5px;line-height:1.6;color:#d6dade}
+.stripe{height:8px;background:repeating-linear-gradient(-45deg,#fc6320 0 12px,#1e2629 12px 24px)}
+.sb{padding:28px 40px;flex:1;display:flex;flex-direction:column}
+.tt{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid #1e2629;padding-bottom:10px}
+.tt h2{font-size:30px;font-weight:800}
+.tt .nro{text-align:right;font-size:12.5px;color:#3a4048}
+.tt .nro b{font:800 15px Archivo;color:#1e2629}
+.cli{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;margin:16px 0 18px;font-size:12.5px}
+.cli span{color:#69707a;display:block;font-size:11px}
+.cli b{font-weight:600}
+.tb{width:100%;border-collapse:collapse;font-size:12.5px}
+.tb th{background:#1e2629;color:#fff;text-align:left;padding:8px 10px;font:700 11.5px Archivo}
+.tb td{padding:8px 10px;border-bottom:1px solid #e3e5e8}
+.tb .r{text-align:right;white-space:nowrap}
+.tot{display:flex;justify-content:flex-end;margin-top:14px}
+.tot div{background:#fff4ec;border:2px solid #fc6320;border-radius:8px;padding:10px 18px;font:800 18px Archivo;white-space:nowrap}
+.tot span{font:600 12px Inter;color:#3a4048;margin-right:12px}
+.obs{margin-top:14px;font-size:12.5px;color:#3a4048;white-space:pre-wrap}
+.cond{margin-top:auto;padding-top:22px}
+.cond h3{font-size:13px;margin-bottom:6px;color:#d94f12}
+.cond ul{margin:0;padding-left:18px;font-size:12px;color:#3a4048}
+.cond li{margin-bottom:4px}
+.pie{background:#f6f5f2;border-top:3px solid #fc6320;padding:12px 40px;font-size:11px;color:#3a4048;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.vacio{color:#69707a;font-style:italic;padding:16px 10px}
+.hint{font-size:12.5px;color:var(--mut);margin-top:4px}
+.hist{max-width:1400px;margin:0 auto 40px;padding:0 max(4vw,16px)}
+.hist>*{max-width:100%}
+.hh{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.hh h2{font-size:24px}.hh input{max-width:340px}
+.scroll{overflow-x:auto}
+.ht{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;font-size:14px}
+.ht th{text-align:left;font:700 12.5px Archivo;color:var(--mut);padding:10px;border-bottom:1px solid var(--line)}
+.ht td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.ht .r{text-align:right;white-space:nowrap}
+.est{font:600 12px Inter;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.est.v{background:#e5f6ec;color:#1d6b3a}.est.x{background:#f3f3f1;color:#69707a}
+.ha{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.ha button{min-height:36px;padding:6px 10px;font-size:13px}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 10px;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;font-weight:600;color:var(--mut)}.stack td:empty{display:none}.ha{justify-content:flex-start}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<header class="top"><img src="logo.png" alt="Muñoz Construcción en Seco"><h1>Presupuestador</h1><a href="./" style="margin-left:auto;color:#fff;font:600 15px Inter">← Volver al tablero</a></header>
+
+<main class="wrap">
+<section>
+  <div class="card">
+    <h2><span class="n">1</span>Subí el presupuesto</h2>
+    <p class="s">PDF, Word o Excel. Apenas lo subís, se leen los renglones y pasan a la hoja con el membrete de Muñoz. Revisalos siempre antes de descargar.</p>
+    <div class="drop" id="drop" tabindex="0" role="button"><b>Tocá para elegir un archivo</b><br>o arrastralo acá</div>
+    <input type="file" id="file" accept=".pdf,.docx,.xlsx,.xls,.csv,.txt" hidden>
+    <label for="pega">…o pegá el texto del presupuesto</label>
+    <textarea id="pega" rows="4" placeholder="Ej.: 10 placas Knauf 12,5 a $ 18.500 c/u…"></textarea>
+    <div class="btns"><button class="btn" id="leer">Leer de nuevo / leer texto pegado</button><button class="btn g" id="manual">Cargar a mano</button></div>
+    <div class="msg" id="msg"></div>
+    <details id="visto" hidden><summary class="hint">Ver lo que se leyó del archivo</summary><pre id="vistoT" style="white-space:pre-wrap;font-size:12px;max-height:220px;overflow:auto"></pre></details>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">2</span>Revisá los datos</h2>
+    <div class="row2">
+      <div><label for="nro">N.º de presupuesto</label><input id="nro"></div>
+      <div><label for="fecha">Fecha</label><input id="fecha" type="date"></div>
+    </div>
+    <label for="cliente">Cliente</label><input id="cliente" placeholder="Nombre y apellido o empresa">
+    <div class="row2">
+      <div><label for="tel">Teléfono del cliente</label><input id="tel"></div>
+      <div><label for="obra">Obra / dirección</label><input id="obra"></div>
+    </div>
+    <label>Ítems</label>
+    <table class="items"><tbody id="it"></tbody></table>
+    <div class="btns"><button class="btn g" id="add">+ Agregar ítem</button></div>
+    <label for="tipoP">¿Qué incluye el presupuesto?</label>
+    <select id="tipoP"><option value="auto">Detectar según los ítems</option><option value="mat">Solo materiales</option><option value="obra">Materiales y obra (mano de obra)</option><option value="mo">Solo mano de obra</option></select>
+    <div class="hint" id="tipoH"></div>
+    <label for="obs">Observaciones (opcional)</label>
+    <textarea id="obs" rows="2" placeholder="Ej.: incluye material y mano de obra"></textarea>
+    <label for="extra">Condición extra (opcional)</label>
+    <input id="extra" placeholder="Ej.: forma de pago a convenir">
+  </div>
+
+  <div class="card">
+    <h2><span class="n">3</span>Descargalo</h2>
+    <div class="btns"><button class="btn" id="pdf">Guardar y descargar PDF</button><button class="btn g" id="guardar">Solo guardar</button><button class="btn g" id="copiar">Copiar texto</button><button class="btn g" id="nuevo">Nuevo presupuesto</button></div>
+    <div class="msg" id="msg2"></div>
+  </div>
+</section>
+
+<section class="sheetbox" id="box" aria-label="Vista del presupuesto"><div id="scaler">
+  <article class="sheet" id="sheet">
+    <div class="mb"><img src="logo.png" alt="Muñoz Construcción en Seco"><div class="dat">Ángela Di Natale de Fulgenzi 56, esq. Francia · Junín (Bs. As.)<br>Tel. 2364 242318 · 2364 313228<br>pmconstruccionesventas@gmail.com<br>munoz-construcciones.github.io</div></div>
+    <div class="stripe"></div>
+    <div class="sb">
+      <div class="tt"><h2>Presupuesto</h2><div class="nro">N.º <b id="vNro"></b><br>Fecha: <b id="vFecha"></b><br>Válido hasta: <b id="vVence"></b></div></div>
+      <div class="cli"><div><span>Cliente</span><b id="vCli"></b></div><div><span>Teléfono</span><b id="vTel"></b></div><div style="grid-column:1/-1"><span>Obra / dirección</span><b id="vObra"></b></div></div>
+      <table class="tb"><thead><tr><th>Descripción</th><th class="r">Cant.</th><th class="r">Precio unit.</th><th class="r">Subtotal</th></tr></thead><tbody id="vIt"></tbody></table>
+      <div class="tot"><div><span>TOTAL</span><b id="vTot"></b></div></div>
+      <div class="obs" id="vObs"></div>
+      <div class="cond"><h3>Condiciones</h3><ul id="vCond"></ul></div>
+    </div>
+    <div class="pie"><span>Muñoz Construcción en Seco · 15 años construyendo en seco en Junín y la zona</span><span>Ni una obra a medias.</span></div>
+  </article>
+</div></section>
+</main>
+<section class="hist" id="hist">
+  <div class="hh"><h2>Presupuestos hechos</h2><input id="buscar" placeholder="Buscar por cliente, número u obra" aria-label="Buscar presupuesto"></div>
+  <p class="s" id="hmsg">Cargando…</p>
+  <div class="scroll"><table class="ht stack"><thead><tr><th>N.º</th><th>Fecha</th><th>Cliente</th><th>Tipo</th><th class="r">Total</th><th>Estado</th><th></th></tr></thead><tbody id="hb"></tbody></table></div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+{
+const $=id=>document.getElementById(id);
+const DIAS=7;
+const money=n=>'$ '+(Math.round((+n||0)*100)/100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const num=v=>{if(typeof v==='number')return v;let s=String(v||'').replace(/[^\d,.-]/g,'');if(s.includes(',')&&s.includes('.'))s=s.replace(/\./g,'').replace(',','.');else if(s.includes(','))s=s.replace(',','.');else if((s.match(/\./g)||[]).length>1||/\.\d{3}$/.test(s))s=s.replace(/\./g,'');return parseFloat(s)||0};
+const fdate=d=>d?d.split('-').reverse().join('/'):'';
+let items=[];
+const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(_){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}};
+
+const hoy=new Date();const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const last=store.get('mz-presu-nro')||0;
+$('nro').value=String(last+1).padStart(4,'0');$('fecha').value=iso(hoy);
+const borr=store.get('mz-presu-borrador');
+if(borr){['cliente','tel','obra','obs','extra'].forEach(k=>$(k).value=borr[k]||'');if(borr.tipoP)$('tipoP').value=borr.tipoP;items=borr.items||[]}
+if(!items.length)items=[{d:'',c:1,p:0}];
+
+function save(){store.set('mz-presu-borrador',{cliente:$('cliente').value,tel:$('tel').value,obra:$('obra').value,obs:$('obs').value,extra:$('extra').value,tipoP:$('tipoP').value,items})}
+function vence(){const f=$('fecha').value;if(!f)return '';const d=new Date(f+'T12:00');d.setDate(d.getDate()+DIAS);return iso(d)}
+
+function renderItems(){
+  $('it').innerHTML='<tr><td class="ih">Descripción</td><td class="ih" style="width:64px">Cant.</td><td class="ih" style="width:110px">Precio unit.</td><td></td></tr>'+items.map((x,i)=>`<tr><td><input data-i="${i}" data-k="d" value="${esc(x.d)}" aria-label="Descripción"></td><td><input data-i="${i}" data-k="c" value="${esc(x.c)}" inputmode="decimal" aria-label="Cantidad"></td><td><input data-i="${i}" data-k="p" value="${esc(x.p)}" inputmode="decimal" aria-label="Precio unitario"></td><td><button class="x" data-del="${i}" aria-label="Quitar ítem">×</button></td></tr>`).join('');
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+const OBRA=/mano de obra|colocaci|instalaci|armado|montaje|ejecuci|\bobra\b|trabajo|servicio|terminaci|masillad|pintur/i;
+const GAR={mat:'Los materiales tienen nuestra garantía de 3 meses desde la entrega. Cubre el material fallado; no cubre daños por mal uso.',
+ obra:'Los materiales y la obra tienen nuestra garantía de 3 meses desde la entrega. Cubre la mano de obra y el material fallado; no cubre daños por mal uso.',
+ mo:'La obra tiene nuestra garantía de 3 meses desde la entrega. Cubre la mano de obra; no cubre daños por mal uso.'};
+const TNOM={mat:'Solo materiales',obra:'Materiales y obra',mo:'Solo mano de obra'};
+function tieneObra(){return items.some(x=>OBRA.test(String(x.d)))||OBRA.test($('obs').value)}
+function tipoReal(){const t=$('tipoP').value;if(t!=='auto')return t;const ok=items.filter(x=>String(x.d).trim());if(!ok.length||!tieneObra())return 'mat';return ok.every(x=>OBRA.test(String(x.d)))?'mo':'obra'}
+function conds(){
+  const v=fdate(vence());
+  const c=[`Este presupuesto tiene una validez de una semana: vence el ${v}. Pasada esa fecha, los precios pueden cambiar.`,
+  GAR[tipoReal()]];
+  if($('extra').value.trim())c.push($('extra').value.trim());
+  return c;
+}
+function render(){
+  $('vNro').textContent=$('nro').value;$('vFecha').textContent=fdate($('fecha').value);$('vVence').textContent=fdate(vence());
+  $('vCli').textContent=$('cliente').value||'—';$('vTel').textContent=$('tel').value||'—';$('vObra').textContent=$('obra').value||'—';
+  const ok=items.filter(x=>String(x.d).trim());
+  let tot=0;
+  $('vIt').innerHTML=ok.length?ok.map(x=>{const st=num(x.c)*num(x.p);tot+=st;return `<tr><td>${esc(x.d)}</td><td class="r">${esc(String(x.c))}</td><td class="r">${money(num(x.p))}</td><td class="r">${money(st)}</td></tr>`}).join(''):'<tr><td colspan="4" class="vacio">Subí un presupuesto o cargá los ítems a mano.</td></tr>';
+  $('vTot').textContent=money(tot);
+  $('vObs').textContent=$('obs').value;
+  $('tipoH').textContent=$('tipoP').value==='auto'?'Detectamos: '+TNOM[tipoReal()]+'. Si no es así, elegilo arriba.':'';
+  $('vCond').innerHTML=conds().map(c=>`<li>${esc(c)}</li>`).join('');
+  save();
+}
+
+$('it').addEventListener('input',e=>{const t=e.target;if(t.dataset.i){items[+t.dataset.i][t.dataset.k]=t.value;render()}});
+$('it').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(b){items.splice(+b.dataset.del,1);if(!items.length)items=[{d:'',c:1,p:0}];renderItems();render()}});
+$('add').onclick=()=>{items.push({d:'',c:1,p:0});renderItems();render();const ins=$('it').querySelectorAll('input[data-k=d]');ins[ins.length-1].focus()};
+['nro','fecha','cliente','tel','obra','obs','extra','tipoP'].forEach(id=>$(id).addEventListener('input',render));
+$('manual').onclick=()=>{$('it').querySelector('input')?.focus()};
+
+/* ----- leer archivos ----- */
+let archivo=null;
+const msg=(t,err)=>{$('msg').textContent=t;$('msg').className='msg'+(err?' err':'')};
+$('drop').onclick=()=>$('file').click();
+$('drop').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('file').click()}};
+$('drop').ondragover=e=>{e.preventDefault();$('drop').classList.add('on')};
+$('drop').ondragleave=()=>$('drop').classList.remove('on');
+$('drop').ondrop=e=>{e.preventDefault();$('drop').classList.remove('on');if(e.dataTransfer.files[0])elegir(e.dataTransfer.files[0])};
+$('file').onchange=e=>{if(e.target.files[0])elegir(e.target.files[0])};
+function elegir(f){archivo=f;$('drop').innerHTML='<b></b><br>Archivo cargado';$('drop').querySelector('b').textContent=f.name;$('leer').click()}
+
+async function extraer(f){
+  const n=f.name.toLowerCase();
+  if(f.type.startsWith('image/'))return {images:[f],text:''};
+  if(n.endsWith('.pdf')){
+    if(!window.pdfjsLib)throw {paso:'No se pudo abrir el PDF en esta vista.'};
+    const pdf=await pdfjsLib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;
+    let text='',images=[];
+    for(let p=1;p<=Math.min(pdf.numPages,4);p++){
+      const pg=await pdf.getPage(p);const tc=await pg.getTextContent();
+      let lastY=null,lastX=null;for(const it of tc.items){if(!it.str.trim()){continue}const y=it.transform?Math.round(it.transform[5]):null,x=it.transform?it.transform[4]:0;if(lastY!==null&&y!==null&&Math.abs(y-lastY)>3)text+='\n';else if(text&&!text.endsWith('\n'))text+=(lastX!==null&&x-lastX>18?'\t':' ');text+=it.str;lastY=y;lastX=x+(it.width||0)}
+      text+='\n';
+      const vp=pg.getViewport({scale:1.5});const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;
+      await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;images.push(await new Promise(r=>c.toBlob(r,'image/jpeg',.85)));
+    }
+    return {text,images};
+  }
+  if(n.endsWith('.xlsx')||n.endsWith('.xls')){if(!window.XLSX)throw {paso:'No se pudo abrir el Excel en esta vista.'};const wb=XLSX.read(await f.arrayBuffer());return {text:wb.SheetNames.map(s=>XLSX.utils.sheet_to_csv(wb.Sheets[s])).join('\n'),images:[]}}
+  if(n.endsWith('.docx')){if(!window.mammoth)throw {paso:'No se pudo abrir el Word en esta vista.'};const r=await mammoth.extractRawText({arrayBuffer:await f.arrayBuffer()});return {text:r.value,images:[]}}
+  if(n.endsWith('.doc'))throw {paso:'Los Word viejos (.doc) no se pueden leer. Guardalo como .docx o PDF, o pegá el texto.'};
+  return {text:await f.text(),images:[]};
+}
+const pick=(o,ks)=>{for(const k of ks){if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=='')return o[k]}return undefined};
+function normalizar(r){
+  if(Array.isArray(r))r={items:r};
+  const L=pick(r,['items','ítems','materiales','lista','productos','detalle'])||[];
+  return {cliente:pick(r,['cliente','nombre'])||'',telefono:pick(r,['telefono','teléfono'])||'',obra:pick(r,['obra','direccion','dirección'])||'',observaciones:pick(r,['observaciones','notas'])||'',tipo:r&&r.tipo,
+    items:(Array.isArray(L)?L:[]).map(x=>{const c=pick(x,['cantidad','cant','qty'])??1,p=pick(x,['precio_unitario','precio','unitario','precio unitario']),st=pick(x,['subtotal','importe','total']);
+      let pu=p!==undefined?num(p):0;if(!pu&&st!==undefined&&num(c))pu=num(st)/num(c);
+      return {d:String(pick(x,['descripcion','descripción','material','producto','detalle','item','nombre'])||''),c:typeof c==='number'?c:(num(c)||1),p:Math.round(pu*100)/100}}).filter(x=>x.d.trim())};
+}
+/* Lectura sin IA: separa cada renglón en columnas y busca descripción, cantidad y precio */
+function leerLocal(text){
+  const ESNUM=/^\$?\s*-?(\d{1,3}(\.\d{3})+(,\d+)?|\d+([.,]\d+)?)\s*(u|un|uds?|m2|m²|ml|m|kg)?\.?$/i;
+  const out=[];
+  for(const raw of text.split(/\r?\n/)){
+    const l=raw.replace(/\[[^\]]*\]/g,' ').trim();
+    if(!l||/^(total|subtotal|iva|importe total|descripci|detalle|cant\b|cantidad)/i.test(l.replace(/^[•\-\s]+/,''))||/superficie de la obra|total de (placa|osb|pvc)|superficie a revestir/i.test(l))continue;
+    let cells=l.split(/\t|\s{2,}|\s\|\s|\|/).map(x=>x.trim()).filter(Boolean);
+    if(cells.length<2&&l.includes(',')&&!/\d,\d/.test(l))cells=l.split(',').map(x=>x.trim()).filter(Boolean);
+    let d='',c=1,p=0;
+    if(cells.length>=2){
+      const nums=[],txt=[];
+      cells.forEach(x=>ESNUM.test(x)?nums.push(num(x)):txt.push(x));
+      d=txt.join(' ');
+      if(!d||!nums.length)continue;
+      if(nums.length>=3){const [a1,a2,a3]=nums.slice(-3);if(Math.abs(a1*a2-a3)<=Math.max(1,a3*0.02)){c=a1;p=a2}else{c=nums[0];p=nums[1]}}
+      else if(nums.length===2){c=nums[0];p=nums[1]}
+      else{const t=cells.find(x=>ESNUM.test(x));if(/\$/.test(t)||nums[0]>=1000)p=nums[0];else c=nums[0]}
+    }else{
+      let m=l.match(/^[•\-–\s]*(\d+(?:[.,]\d+)?)\s*(u|un|uds?|unid\w*|m2|m²|ml|m|kg|baldes?|rollos?|bolsas?|tiras?|x)?\.?\s*[—–\-:x]\s*(.+)$/i);
+      if(m){c=num(m[1]);d=m[3]}
+      else if((m=l.match(/^[•\-–\s]*(\d+(?:[.,]\d+)?)\s+(.+?)\s+(?:a|x|c\/u|por)?\s*\$\s*([\d.,]+)\s*(?:c\/u|cada una?)?\s*$/i))){c=num(m[1]);d=m[2];p=num(m[3])}
+      else if((m=l.match(/^(.+?)\s*[—–\-:]?\s*\$\s*([\d.,]+)\s*$/))){d=m[1];p=num(m[2])}
+      else continue;
+      const pm=d.match(/\$\s*([\d.,]+)/);if(pm&&!p){p=num(pm[1]);d=d.replace(pm[0],'')}
+    }
+    d=d.replace(/^[•\-–\s]+/,'').replace(/[\s,—–\-:]+$/,'').trim();
+    if(d.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ]/g,'').length<3)continue;
+    out.push({d,c:c||1,p:Math.round((p||0)*100)/100});
+  }
+  return out;
+}
+function sacarJSON(t){const a=t.indexOf('{'),b=t.lastIndexOf('}'),a2=t.indexOf('[');let s=a>=0&&b>a?t.slice(a,b+1):(a2>=0?t.slice(a2,t.lastIndexOf(']')+1):'');return JSON.parse(s)}
+
+let sampleFn=null;
+claude.use('sample').then(s=>{sampleFn=s}).catch(()=>{});
+$('leer').onclick=async()=>{
+  const pegado=$('pega').value.trim();
+  if(!archivo&&!pegado){msg('Primero subí un archivo o pegá el texto.',1);return}
+  $('leer').disabled=true;msg('Abriendo el archivo…');
+  try{
+    let {text,images}=archivo?await extraer(archivo):{text:'',images:[]};
+    if(pegado)text=(text?text+'\n':'')+pegado;
+    let imgOk=false;try{const lim=await sampleFn.limits?.();imgOk=!!(lim&&lim.images)}catch(_){}
+    if(!imgOk)images=[];
+    if(!sampleFn){
+      if(!text.trim())throw {paso:archivo&&archivo.type.startsWith('image/')?'Las fotos no se pueden leer en esta versión. Subí el PDF, Word o Excel, o pegá el texto.':'No encontré texto en el archivo. Pegá el texto o cargá los ítems a mano.'};
+      const L=leerLocal(text);
+      if(!L.length){$('visto').hidden=false;$('vistoT').textContent=text.slice(0,3000);throw {paso:'No encontré renglones con cantidades. Abajo ves lo que se leyó: copiá lo que sirva o cargalo a mano.'}}
+      items=L;renderItems();render();$('visto').hidden=true;
+      const sinP=items.filter(x=>!num(x.p)).length;
+      msg(`Listo: ${items.length} ítems.${sinP?` ${sinP} quedaron sin precio: completalos.`:''} Revisá descripciones, cantidades y precios antes de descargar.`);
+      $('leer').disabled=false;return;
+    }
+    if(!text.trim()&&!images.length)throw {paso:'No encontré texto en el archivo. Si es un escaneo o una foto, probá subirlo como imagen (JPG o PNG) o pegá el texto.'};
+    msg('Claude está leyendo los ítems…');
+    const prompt=`Sos asistente de un comercio argentino de construcción en seco (Muñoz). Te paso un presupuesto o una lista de materiales. Extraé TODOS los renglones de materiales, trabajos o servicios.
+Respondé SOLO con JSON, sin texto antes ni después, con esta forma exacta:
+{"cliente":"","telefono":"","obra":"","observaciones":"","tipo":"materiales","items":[{"descripcion":"","cantidad":1,"precio_unitario":0}]}
+Reglas:
+- tipo: "materiales" si son solo materiales; "mano_de_obra" si solo cobra trabajo (colocación, instalación, armado) sin materiales; "ambos" si incluye materiales y trabajo.
+- Un objeto por renglón. Copiá la descripción tal cual (marca, medida, espesor).
+- cantidad y precio_unitario como números, sin $ ni puntos de miles (ej. 18500.5).
+- Si un renglón tiene cantidad y subtotal pero no precio unitario, calculá precio_unitario = subtotal / cantidad.
+- Si no hay precios (por ejemplo, una lista de materiales), dejá precio_unitario en 0 igual: no omitas el renglón.
+- No incluyas filas de TOTAL, subtotal general ni IVA como ítems.
+- No inventes nada: lo que no figure queda vacío.
+${text.trim()?'\nTEXTO DEL ARCHIVO:\n'+text.slice(0,18000):''}${images.length?'\n\nTambién te adjunto la imagen de la página: usala para leer la tabla si el texto está desordenado.':''}`;
+    const r=await sampleFn(prompt,images.length?{images:images.slice(0,3),modelTier:'default'}:{modelTier:'default'});
+    let data;try{data=normalizar(sacarJSON(r.text||''))}catch(_){throw {paso:'Claude respondió, pero no en el formato esperado. Probá de nuevo o pegá el texto.'}}
+    if(!data.items.length){$('visto').hidden=false;$('vistoT').textContent=text.slice(0,3000)||'(solo imagen)';throw {paso:'Claude no encontró renglones en el archivo. Abajo podés ver lo que se leyó; si está vacío o desordenado, pegá el texto en el recuadro.'}}
+    items=data.items;
+    if(data.cliente)$('cliente').value=data.cliente;if(data.telefono)$('tel').value=data.telefono;if(data.obra)$('obra').value=data.obra;if(data.observaciones)$('obs').value=data.observaciones;
+    const TT={materiales:'mat',mano_de_obra:'mo',ambos:'obra'};if(TT[data.tipo])$('tipoP').value=TT[data.tipo];
+    renderItems();render();$('visto').hidden=true;
+    const sinP=items.filter(x=>!num(x.p)).length;
+    msg(`Listo: ${items.length} ítems.${sinP?` ${sinP} quedaron sin precio: completalos.`:''} Revisalos antes de descargar.`);
+  }catch(e){msg(e&&e.paso?e.paso:e&&e.code==='rate_limited'?'Claude está ocupado. Probá de nuevo en un rato.':e&&e.code==='not_granted'?'No diste permiso para usar Claude. Podés cargar los ítems a mano.':'No pude leer el archivo ('+(e&&(e.message||e.code)||'error')+'). Probá pegando el texto.',1)}
+  $('leer').disabled=false;
+};
+
+/* ----- PDF ----- */
+let dl=null;claude.use('downloads').then(d=>{dl=d;if(!d){$('pdf').disabled=true;$('msg2').textContent='La descarga no está disponible en esta vista. Usá "Copiar texto".'}}).catch(()=>{});
+$('pdf').onclick=async()=>{
+  if(!dl||!window.html2canvas||!window.jspdf){$('msg2').textContent='No se pudo armar el PDF en esta vista.';return}
+  $('pdf').disabled=true;$('msg2').textContent='Armando el PDF…';
+  try{
+    const tr=$('scaler').style.transform;$('scaler').style.transform='';
+    let c;try{c=await html2canvas($('sheet'),{scale:2,backgroundColor:'#ffffff',useCORS:true})}finally{$('scaler').style.transform=tr}
+    const pdf=new jspdf.jsPDF({unit:'mm',format:'a4'});const W=210,H=c.height*W/c.width;
+    if(H<=297.5)pdf.addImage(c.toDataURL('image/jpeg',.92),'JPEG',0,0,W,H);
+    else{const ph=Math.floor(c.width*297/210);for(let y=0,i=0;y<c.height;y+=ph,i++){const p=document.createElement('canvas');p.width=c.width;p.height=Math.min(ph,c.height-y);p.getContext('2d').drawImage(c,0,-y);if(i)pdf.addPage();pdf.addImage(p.toDataURL('image/jpeg',.92),'JPEG',0,0,W,p.height*W/c.width)}}
+    const nombre=`Presupuesto Muñoz ${$('nro').value}${$('cliente').value?' - '+$('cliente').value.replace(/[\\/:*?"<>|]/g,''):''}.pdf`;
+    const g=await guardar();
+    await dl.save({filename:nombre,data:pdf.output('blob')});
+    $('msg2').textContent=g&&db?`Listo: descargado y guardado en el historial como N.º ${$('nro').value}. Para el siguiente, tocá "Nuevo presupuesto".`:'PDF descargado.';
+  }catch(e){$('msg2').textContent='La descarga se canceló o no se pudo hacer.'}
+  $('pdf').disabled=false;
+};
+$('copiar').onclick=async()=>{
+  const ok=items.filter(x=>String(x.d).trim());let tot=0;
+  const L=ok.map(x=>{const st=num(x.c)*num(x.p);tot+=st;return `• ${x.d} — ${x.c} × ${money(num(x.p))} = ${money(st)}`});
+  const t=`MUÑOZ CONSTRUCCIÓN EN SECO\nPresupuesto N.º ${$('nro').value} · ${fdate($('fecha').value)}\nCliente: ${$('cliente').value||'—'}\nObra: ${$('obra').value||'—'}\n\n${L.join('\n')}\n\nTOTAL: ${money(tot)}\n${$('obs').value?'\n'+$('obs').value+'\n':''}\nCondiciones:\n${conds().map(c=>'- '+c).join('\n')}\n\nTel. 2364 242318 · 2364 313228`;
+  try{await navigator.clipboard.writeText(t);$('msg2').textContent='Texto copiado: lo podés pegar en WhatsApp.'}catch(_){$('msg2').textContent='No se pudo copiar en esta vista.'}
+};
+
+/* ----- historial compartido ----- */
+let db=null,HIST=[];
+const totalDe=L=>L.filter(x=>String(x.d).trim()).reduce((a,x)=>a+num(x.c)*num(x.p),0);
+function datos(){return {nro:$('nro').value.trim(),fecha:$('fecha').value,vence:vence(),cliente:$('cliente').value,tel:$('tel').value,obra:$('obra').value,obs:$('obs').value,extra:$('extra').value,tipo:tipoReal(),tipoSel:$('tipoP').value,items:items.filter(x=>String(x.d).trim()).map(x=>({d:String(x.d),c:x.c,p:x.p})),total:Math.round(totalDe(items)*100)/100,guardado:new Date().toISOString()}}
+function cargar(p,dup){
+  $('nro').value=dup?siguiente():p.nro;$('fecha').value=dup?iso(new Date()):p.fecha;
+  ['cliente','tel','obra','obs','extra'].forEach(k=>$(k).value=p[k]||'');$('tipoP').value=p.tipoSel||'auto';
+  items=(p.items&&p.items.length?p.items:[{d:'',c:1,p:0}]).map(x=>({...x}));renderItems();render();
+  $('msg2').textContent=dup?'Copia lista con número nuevo y fecha de hoy.':`Abriste el presupuesto N.º ${p.nro}.`;window.scrollTo({top:0,behavior:'smooth'});
+}
+function siguiente(){const m=Math.max(store.get('mz-presu-nro')||0,...HIST.map(h=>parseInt(h.nro,10)||0));return String(m+1).padStart(4,'0')}
+async function guardar(){
+  const d=datos();if(!d.nro){$('msg2').textContent='Poné un número de presupuesto.';return false}
+  if(!d.items.length){$('msg2').textContent='Cargá al menos un ítem antes de guardar.';return false}
+  const n=parseInt(d.nro,10);if(n>(store.get('mz-presu-nro')||0))store.set('mz-presu-nro',n);
+  if(!db){$('msg2').textContent='No se pudo guardar en el historial desde esta vista.';return true}
+  try{await db.collection('presupuestos').doc(d.nro.replace(/[\/.#\[\]]/g,'-')).set(d);return true}
+  catch(e){$('msg2').textContent='No se pudo guardar en el historial ('+(e.code||'error')+').';return false}
+}
+function pintarHist(){
+  const q=$('buscar').value.trim().toLowerCase(),hoyIso=iso(new Date());
+  const L=HIST.filter(h=>!q||[h.nro,h.cliente,h.obra].join(' ').toLowerCase().includes(q));
+  $('hmsg').textContent=HIST.length?`${HIST.length} presupuesto${HIST.length>1?'s':''} guardado${HIST.length>1?'s':''}. ${window.NUBE_URL?'Los ven todos los que usan el tablero.':'Por ahora se guardan solo en esta computadora.'}`:'Todavía no hay presupuestos guardados. Se guardan al descargar el PDF o con "Solo guardar".';
+  $('hb').innerHTML=L.map(h=>{const vig=h.vence&&h.vence>=hoyIso;return `<tr><td><b>${esc(h.nro)}</b></td><td>${esc(fdate(h.fecha))}</td><td>${esc(h.cliente||'—')}</td><td>${esc(TNOM[h.tipo]||'')}</td><td class="r">${money(h.total)}</td><td><span class="est ${vig?'v':'x'}">${vig?'Vigente hasta '+esc(fdate(h.vence)):'Vencido'}</span></td><td><div class="ha"><button class="btn g" data-ab="${esc(h.nro)}">Abrir</button><button class="btn g" data-du="${esc(h.nro)}">Duplicar</button><button class="btn g" data-bo="${esc(h.nro)}">Borrar</button></div></td></tr>`}).join('')||(HIST.length?'<tr><td colspan="7">No hay coincidencias.</td></tr>':'');
+}
+$('buscar').addEventListener('input',pintarHist);
+$('hb').addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;const f=k=>HIST.find(h=>h.nro===b.dataset[k]);
+  if(b.dataset.ab)cargar(f('ab'),false);
+  else if(b.dataset.du)cargar(f('du'),true);
+  else if(b.dataset.bo){if(b.dataset.ok!=='1'){b.dataset.ok='1';b.textContent='¿Seguro?';setTimeout(()=>{b.dataset.ok='';b.textContent='Borrar'},3000);return}
+    try{await db.collection('presupuestos').doc(b.dataset.bo.replace(/[\/.#\[\]]/g,'-')).delete()}catch(err){$('hmsg').textContent='No se pudo borrar ('+(err.code||'error')+').'}}
+});
+claude.use('db').then(d=>{db=d;if(!d){$('hmsg').textContent='El historial no está disponible en esta vista (hay que entrar con la cuenta de Claude).';return}
+  const t=setTimeout(()=>{if(!HIST.length)$('hmsg').textContent='El historial tarda en cargar. Revisá la conexión.'},10000);
+  d.collection('presupuestos').onSnapshot(snap=>{clearTimeout(t);HIST=(snap.docs||snap).map(x=>x.data?x.data():x).filter(Boolean).sort((a,b)=>(parseInt(b.nro,10)||0)-(parseInt(a.nro,10)||0));
+    const n=parseInt($('nro').value,10);if(HIST.some(h=>parseInt(h.nro,10)===n)&&!$('cliente').value)$('nro').value=siguiente();pintarHist()},err=>{clearTimeout(t);$('hmsg').textContent='No se pudo leer el historial ('+(err&&err.code||'error')+').'});
+}).catch(()=>{$('hmsg').textContent='El historial no está disponible en esta vista.'});
+$('guardar').onclick=async()=>{if(await guardar()&&db)$('msg2').textContent=`Guardado en el historial como N.º ${$('nro').value}.`};
+$('nuevo').onclick=()=>{$('nro').value=siguiente();$('fecha').value=iso(new Date());['cliente','tel','obra','obs','extra','pega'].forEach(k=>$(k).value='');$('tipoP').value='auto';items=[{d:'',c:1,p:0}];archivo=null;$('drop').innerHTML='<b>Tocá para elegir un archivo</b><br>o arrastralo acá';renderItems();render();$('msg2').textContent='';msg('')};
+function fit(){const w=$('box').clientWidth,k=Math.min(1,w/794);$('scaler').style.transform=k<1?`scale(${k})`:'';$('box').style.height=($('sheet').offsetHeight*k+8)+'px'}
+const ro=new ResizeObserver(fit);ro.observe($('box'));ro.observe($('sheet'));
+renderItems();render();fit();
+}
+</script>
+</body>
+</html>

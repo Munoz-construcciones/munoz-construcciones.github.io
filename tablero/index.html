@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<script src="nube.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muñoz · Tablero de marca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: herramienta de trabajo diaria, ordenada y concreta, para Paula y Agustina.
+   IDEA: la carpeta de obra del comercio: pestañas de plano y una libreta de obra al costado.
+   PICTURE: la agenda de hoy (lo que toca publicar y hacer) arriba de todo, grande.
+   COLOUR and TYPE: grafito, naranja Muñoz y hueso; Barlow Condensed (la letra de las placas) + Inter.
+   LAYOUT: banda grafito con logo, pestañas, contenido a la izquierda y libreta-agenda a la derecha (abajo en el celular). */
+:root{color-scheme:light dark;--bg:light-dark(#f6f5f2,#121619);--card:light-dark(#fff,#1b2126);--ink:light-dark(#1e2629,#eef0f1);--ink2:light-dark(#4a5058,#b8bec5);--line:light-dark(#e3e5e8,#2c343b);--acc:#fc6320;--accd:light-dark(#c9470d,#ff8a50);--dk:#1e2629;--soft:light-dark(#fff1e8,#2a1d15)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3,.cond{font-family:"Barlow Condensed",Inter,sans-serif;line-height:1.05;margin:0}
+h2{font-size:clamp(30px,4vw,42px);font-weight:800;margin-bottom:10px;text-wrap:balance}
+h3{font-size:24px;font-weight:700;margin:26px 0 10px}
+p{margin:0 0 12px}
+a{color:var(--accd)}
+header{background:var(--dk);color:#fff;position:relative}
+header:after{content:"";display:block;height:12px;background:repeating-linear-gradient(-45deg,var(--acc) 0 16px,var(--dk) 16px 32px)}
+.hb{max-width:1320px;margin:0 auto;padding:18px max(4vw,16px);display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.hb img{height:46px}.hb .t{font:700 22px "Barlow Condensed";color:#d9dde1}
+nav{display:flex;gap:6px;flex-wrap:wrap;max-width:1320px;margin:0 auto;padding:14px max(4vw,16px) 0}
+nav button{font:700 19px "Barlow Condensed";letter-spacing:.02em;background:var(--card);color:var(--ink);border:1px solid var(--line);border-bottom:0;padding:10px 18px;border-radius:10px 10px 0 0;cursor:pointer;min-height:44px}
+nav button.on{background:var(--acc);color:#1e2629;border-color:var(--acc)}
+.wrap{max-width:1320px;margin:0 auto;padding:0 max(4vw,16px) 60px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;align-items:start}
+@media(max-width:1000px){.wrap{grid-template-columns:minmax(0,1fr)}}
+main{background:var(--card);border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:clamp(18px,3vw,36px)}
+.lead{color:var(--ink2);max-width:70ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.box{border:1px solid var(--line);border-radius:10px;padding:16px;background:var(--bg)}
+.box b{display:block}
+.sw{height:64px;border-radius:8px;margin-bottom:10px;border:1px solid var(--line)}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:6px 0 18px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:700 16px "Barlow Condensed";letter-spacing:.02em}
+.tag{display:inline-block;font:700 13px Inter;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--accd)}
+.reels{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.reel{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column}
+.reel video,.reel img{width:100%;aspect-ratio:9/16;object-fit:cover;background:#000;display:block}
+.reel img.sq{aspect-ratio:4/5}
+.reel .in{padding:12px;display:flex;flex-direction:column;gap:6px;flex:1}
+.reel .in b{font:700 20px "Barlow Condensed"}
+.reel small{color:var(--ink2);font-size:13px}
+.btn{font:700 15px Inter;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:10px 14px;border-radius:8px;border:0;cursor:pointer;background:var(--acc);color:#1e2629;text-decoration:none}
+.btn.g{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.msg{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:var(--bg)}
+.msg .h{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.msg .h b{font:700 19px "Barlow Condensed"}
+.msg pre{white-space:pre-wrap;font:15px/1.55 Inter;margin:0}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 18px}
+.filters button{min-height:40px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 14px Inter;cursor:pointer}
+.filters button.on{background:var(--dk);color:#fff;border-color:var(--dk)}
+.note{border-left:4px solid var(--acc);background:var(--soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0}
+aside{position:sticky;top:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;max-height:calc(100vh - 24px);overflow:auto}
+@media(max-width:1000px){aside{position:static;max-height:none}}
+aside h2{font-size:30px}
+.today{background:var(--dk);color:#fff;border-radius:10px;padding:14px;margin:8px 0 14px}
+.today .d{font:800 28px "Barlow Condensed";color:var(--acc)}
+.day{border-top:1px solid var(--line);padding:10px 0}
+.day .dh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;cursor:pointer}
+.day .dh b{font:700 18px "Barlow Condensed"}
+.day .cnt{font-size:13px;color:var(--ink2);white-space:nowrap}
+.day.done .dh b{color:var(--ink2);text-decoration:line-through}
+.day.is-today{background:var(--soft);margin:0 -10px;padding:10px;border-radius:8px}
+.it{display:flex;gap:10px;align-items:flex-start;padding:5px 0;font-size:14.5px}
+.it input{width:20px;height:20px;accent-color:var(--acc);flex:none;margin-top:2px}
+.it.ok span{text-decoration:line-through;color:var(--ink2)}
+textarea,input[type=text]{width:100%;font:16px Inter;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);color:var(--ink)}
+textarea{min-height:60px;resize:vertical;margin-top:6px}
+.addrow{display:flex;gap:6px;margin-top:6px}.addrow .btn{min-height:40px;padding:6px 12px}
+.st{font-size:13px;color:var(--ink2);margin-top:6px}
+.week{margin-bottom:18px}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.k .box b{font:800 30px "Barlow Condensed";color:var(--accd)}
+.pro{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--bg)}
+.pro.ok{opacity:.6}.pro.ok b.pt{text-decoration:line-through}
+.pro .ph{display:flex;gap:12px;align-items:flex-start}
+.pro .ph input{width:22px;height:22px;accent-color:var(--acc);flex:none;margin-top:3px}
+.pro b.pt{font:700 20px "Barlow Condensed";display:block}
+.pro .meta{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.pro ol{margin:6px 0 0;padding-left:20px;font-size:15px}
+.pro p{font-size:15px;margin:4px 0 0;color:var(--ink2)}
+.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin:6px 0 18px}.bar i{display:block;height:100%;background:var(--acc)}
+.fotos{background:var(--soft);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.fotos b{display:block;color:var(--accd);font-size:14px}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;font-weight:600}.stack td:empty{display:none}}
+@media(prefers-reduced-motion:no-preference){.tabp{animation:f .25s ease}@keyframes f{from{opacity:0;transform:translateY(6px)}}}
+.presu{margin-left:auto;background:#fc6320;color:#1e2629;font:700 15px Archivo,sans-serif;text-decoration:none;padding:10px 16px;border-radius:8px;white-space:nowrap}
+.presu:hover{background:#ff7a3d}
+</style><script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script></head>
+<body>
+<header><div class="hb"><img src="media/logo.png" alt="Muñoz Construcción en Seco"><span class="t">Tablero de marca, contenidos y plan</span><a class="presu" href="presupuestos.html">Presupuestador</a></div></header>
+<nav id="nav">
+  <button data-t="marca">Marca</button>
+  <button data-t="reels">Reels y placas</button>
+  <button data-t="mensajes">Mensajes</button>
+  <button data-t="plan">Plan de captación y redes</button>
+  <button data-t="crecer">Para crecer</button>
+</nav>
+<div class="wrap">
+<main id="main"></main>
+<aside>
+  <h2>Libreta de obra</h2>
+  <p class="lead" style="font-size:14px">Lo que toca cada día. Tildá lo que hicieron y anotá lo que pasó.</p>
+  <div class="today" id="today"></div>
+  <div id="agenda"></div>
+  <div class="st" id="st">Guardando en este navegador.</div>
+</aside>
+</div>
+<script>
+{
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+
+/* ---------- DATOS ---------- */
+const COLORES=[['Naranja Muñoz','#fc6320','Botones, resaltados, marcos y la palabra clave de cada placa. En video: #f86f1a.'],['Grafito','#1e2629','Fondos oscuros, cajas de texto y letras. En video: #14181c.'],['Hueso','#f6f5f2','Fondos claros de la web y documentos.'],['Naranja profundo','#d94f12','Textos chicos naranjas sobre fondo claro.'],['Gris texto','#3a4048','Textos secundarios.'],['Verde WhatsApp','#25d366','Solo en botones de WhatsApp.']];
+const REELS=[
+ {f:'munoz_capitulo5_mudanza_nuevo_v2',falta:1,t:'Capítulo 5 · Nos mudamos',c:'mudanza',d:'31 s · fotos de obra, equipo y local actual, mapa de la nueva ubicación, voz de Diego, música Corporate Advertising. Publicar el miércoles 9/12.',v:1},
+ {f:'munoz_capitulo4_teaser',falta:1,t:'Capítulo 4 · Teaser',c:'mudanza',d:'16 s · "Algo se está moviendo…" sin dirección. Publicar el miércoles 2/12.',v:1},
+ {f:'munoz_capitulo5_mudanza_placa_corregida',t:'Placa · Nos mudamos',c:'mudanza',d:'1080 × 1350 · dirección completa y teléfonos. Va junto con el Capítulo 5.',v:0,ext:'png'},
+ {f:'munoz_reel_humedad',t:'Reel · Pared con humedad',c:'anuncios',d:'30 s · placa común sobre omega con cámara de aire y rejilla vs. paneles pegados. Voz de María Clara. Versión final pendiente de fotos de omegas y rejilla.',v:1},
+ {f:'munoz_ad1_particulares_ampliar',falta:1,t:'Anuncio · ¿Necesitás un cuarto más?',c:'anuncios',d:'14 s · particulares, con pauta. Cierre: "Mandanos el plano y te pasamos el presupuesto".',v:1},
+ {f:'munoz_ad2_particulares_precio_cerrado',t:'Anuncio · Precio cerrado',c:'anuncios',d:'14 s · particulares, con pauta. Material + colocación y garantía de 3 meses.',v:1},
+ {f:'munoz_ad3_colocadores',falta:1,t:'Anuncio · ¿Sos colocador?',c:'anuncios',d:'14 s · colocadores, sin pauta. Cierre: "Escribinos qué necesitás y te pasamos precios".',v:1},
+ {f:'munoz_ad4_empresas_placa',t:'Placa · Empresas',c:'anuncios',d:'1080 × 1350 · "Un proveedor que cumple la fecha". Para mail y LinkedIn.',v:0,ext:'png'}
+];
+const M=[
+ /* pies de publicación */
+ ['pies','Pie · Capítulo 1 (nueva imagen)',`Muñoz · Capítulo 1 🧱\n\nHace 15 años empezamos con una idea simple: hacer las cosas bien, una obra a la vez.\nPasaron clientes, obras, años de trabajo y mucha confianza.\n\nHoy queremos contarles algo: algo nuevo está naciendo. ✨\n\nEsta es nuestra historia, y recién empieza un nuevo capítulo. Seguinos para no perderte lo que viene.\n\n📞 2364 242318\n\n#MuñozConstrucciónEnSeco #Junín #ConstrucciónEnSeco #SteelFrame #15Años #AlgoNuevoEstáNaciendo`],
+ ['pies','Pie · Capítulo 3 (cómo trabajamos)',`Muñoz · Capítulo 3 🧱\n\nPrimero, la estructura. Después, las placas. Y el espacio empieza a tomar forma.\nTerminaciones prolijas, hasta el último detalle.\n\nAsí trabajamos en Muñoz Construcciones. 15 años construyendo en seco, ni una obra a medias.\n\n📞 2364 242318\n\n#MuñozConstrucciónEnSeco #Junín #ConstrucciónEnSeco #SteelFrame`],
+ ['pies','Pie · Capítulo 4 (teaser)',`Algo se está moviendo en Muñoz 👀 Después de tantos años con ustedes, se viene una etapa nueva. Muy pronto les contamos todo. #MuñozConstrucciónEnSeco #Junín`],
+ ['pies','Pie · Capítulo 5 (nos mudamos)',`Muñoz · Capítulo 5 🏗️ ¡Nos mudamos!\n\nDesde 2018 nos encontrás en Benito de Miguel 990. A fines de diciembre damos el gran paso: nuestro local propio, muy cerca de donde estábamos, en Ángela Di Natale de Fulgenzi 56, esquina Francia.\n\nUn espacio pensado para vos: más cómodo, más acogedor y con todo lo que necesita tu obra. Abrimos en breve.\n\nMientras nos mudamos, te atendemos por teléfono de 8 a 16:\n📞 2364 242318 · 2364 313228\n\n¡Te esperamos! #MuñozConstrucciónEnSeco #Junín`],
+ ['pies','Pie · Anuncio "¿Necesitás un cuarto más?"',`¿Querés ampliar tu casa? Lo hacemos en steel frame, con precio cerrado y sin sorpresas. Mandanos el plano y te pasamos el presupuesto. Junín y la zona.`],
+ ['pies','Pie · Anuncio "Precio cerrado"',`Material + colocación en un solo precio, y garantía de 3 meses. 15 años de obras en Junín. Pedí tu presupuesto por WhatsApp.`],
+ ['pies','Pie · Anuncio colocadores',`¿Sos colocador? No pierdas el día esperando material: te lo llevamos a la obra. Escribinos qué necesitás y te pasamos precios de colocador.`],
+ ['pies','Pie · Placa empresas',`Cotización en 24 h con tu cómputo, precio sostenido 15 días y entregas programadas en obra.`],
+ ['pies','Pie · Reel pared con humedad',`¿Pared con humedad? 💧 No la tapes: hacela respirar.
+
+Muchos pegan paneles directo sobre la pared húmeda. La humedad queda atrapada y, con el tiempo, aparecen manchas, hongos y los paneles se parten o se despegan.
+
+Nosotros lo hacemos distinto 👇
+✅ Placa sobre perfiles omega
+✅ Cámara de aire entre la pared y la placa
+✅ Rejilla de ventilación abajo para que la pared respire
+
+Así los hongos no vuelven a salir a la placa y la terminación dura.
+
+¿Tenés humedad en una pared? Escribinos y te decimos cómo resolverlo.
+📲 2364 242318 · 2364 313228
+
+#MuñozConstrucciónEnSeco #Junín #ConstrucciónEnSeco #Humedad #ParedConHumedad #Durlock #PlacaDeYeso`],
+ /* whatsapp clientes */
+ ['clientes','WhatsApp · Particulares (cuarto más)',`¡Hola! 👋 Te escribimos de Muñoz Construcción en Seco. Si estás pensando en ampliar tu casa o sumar un ambiente, lo hacemos en steel frame, con precio cerrado y sin sorpresas. 🏗️\n\nMandanos el plano por acá y te pasamos el presupuesto. ¡Te esperamos!`],
+ ['clientes','WhatsApp · Particulares (precio cerrado)',`¡Hola! 👋 Somos Muñoz Construcción en Seco, con 15 años de obras en Junín y la zona.\n\nTe damos un precio cerrado: material y colocación juntos, con garantía de 3 meses. ✅\n\nSi tenés una obra en mente, mandanos el plano y te pasamos el presupuesto.`],
+ ['clientes','WhatsApp · Colocadores (con el reel)',`¡Hola! 👋 Te escribimos de Muñoz Construcción en Seco. No pierdas el día esperando material: te lo llevamos a la obra. 🚚\n\nTenemos precios especiales para colocadores. Escribinos qué necesitás y te pasamos precios.`],
+ ['clientes','WhatsApp · Empresas',`Hola, ¿cómo están? Les escribimos de Muñoz Construcción en Seco, de Junín, con 15 años en el rubro.\n\nTrabajamos con cotización en 24 h, precio sostenido 15 días y entregas programadas en obra con vehículo propio.\n\nSi tienen una obra o remodelación en los próximos meses, mándennos el cómputo y les pasamos la cotización. ¡Gracias!`],
+ ['clientes','Bienvenida automática de WhatsApp',`¡Hola! Gracias por escribirnos. Para darte un presupuesto cerrado, mandanos el plano de lo que querés hacer (una foto del plano alcanza). Si todavía no tenés plano, contanos la idea y te orientamos.`],
+ ['clientes','Seguimiento de presupuesto (a los 2 días)',`Hola [nombre], ¿pudiste ver el presupuesto? Si querés, coordinamos una visita sin cargo para confirmar medidas antes de arrancar.`],
+ ['clientes','Seguimiento a arquitectos (3 días después del mail)',`Hola, arq. [Apellido]. Soy [nombre], de Muñoz Construcción en Seco. La semana pasada le mandamos nuestra presentación. ¿Le puedo llevar el muestrario de placas y PVC Barbieri al estudio? Son 15 minutos, cuando le quede cómodo.`],
+ ['clientes','Primer contacto con un colocador en obra',`Hola [nombre], soy [nombre] de Muñoz. Te vimos trabajando en [calle]. Tenemos precio de colocador y te llevamos el material a la obra. Escribime qué necesitás y te paso precios.`],
+ ['clientes','Empresas por LinkedIn o mail',`Hola [nombre]. Soy [nombre], de Muñoz Construcción en Seco (Junín, 15 años). Trabajamos con entrega programada en obra y cotización en 24 horas. ¿Tienen alguna obra o remodelación en los próximos meses? Con el cómputo le mando el presupuesto al día siguiente.`],
+ /* opiniones */
+ ['opiniones','Pedir opinión · Cálido',`¡Hola, [nombre]! 😊 Te escribimos de Muñoz Construcción en Seco.\n\nQueremos agradecerte por elegirnos. Para nosotros cada cliente es parte de estos 15 años de trabajo en Junín. 🧡\n\n¿Nos harías un favor muy grande? Contanos en Google cómo te fue con nosotros. Te lleva menos de un minuto y nos ayuda muchísimo a que otras familias y profesionales nos conozcan:\n👉 https://g.page/r/CeXHeLOC4CdJEBM/review\n\n¡Gracias de corazón por tu confianza!`],
+ ['opiniones','Pedir opinión · Corto',`¡Hola, [nombre]! 👋 Somos Muñoz Construcción en Seco.\n\n¿Nos regalás un minuto? Nos encantaría saber cómo te fue con nosotros, ya sea con la compra o con la obra. ⭐\n\nDejá tu opinión acá:\n👉 https://g.page/r/CeXHeLOC4CdJEBM/review\n\n¡Mil gracias por elegirnos!`],
+ ['opiniones','Pedir opinión · Mudanza',`¡Hola, [nombre]! 😊 Te escribimos de Muñoz Construcción en Seco.\n\nEstamos por estrenar nuestro local propio y queremos llegar con la voz de quienes ya nos conocen. Por eso, te pedimos un favor: contanos en Google cómo te fue con nosotros. 🏗️\n\n👉 https://g.page/r/CeXHeLOC4CdJEBM/review\n\nTe lleva menos de un minuto y para nosotros vale muchísimo. ¡Gracias por acompañarnos en esta nueva etapa! 🧡`],
+ /* google */
+ ['google','Google Business · Descripción',`Muñoz Construcción en Seco es una empresa de Junín con más de 15 años de trayectoria en construcción en seco. Ofrecemos materiales y mano de obra para obras completas o por etapas: steel frame, tabiques y cielorrasos de placa de yeso, revestimientos de PVC y terminaciones. Trabajamos con marcas líderes como Knauf, Barbieri y Anclaflex, y asesoramos a cada cliente para elegir la solución adecuada y calcular los materiales necesarios. Entregamos en obra con vehículo propio y respaldamos nuestros trabajos con garantía de 3 meses. Atendemos a particulares, colocadores, estudios de arquitectura y empresas en Junín y la zona. A fines de diciembre nos mudamos a nuestro local propio en Ángela Di Natale de Fulgenzi 56, esquina Francia.`],
+ ['google','Google Business · Servicios',`1. Construcción en steel frame: viviendas, ampliaciones y locales con perfiles de acero galvanizado. Obra rápida, limpia y con excelente aislación.\n2. Ampliaciones y nuevos ambientes: dormitorios, oficinas, quinchos o locales, con presupuesto cerrado de obra terminada.\n3. Tabiques y divisiones de placa de yeso, con aislación acústica opcional.\n4. Cielorrasos de placa de yeso y de PVC, suspendidos o aplicados.\n5. Revestimientos de PVC Barbieri, resistentes a la humedad. También PVC importado según tu presupuesto.\n6. Revestimientos exteriores y aislación: placas para exterior, barreras de agua y viento, y revoque.\n7. Venta de materiales para construcción en seco: Knauf, Barbieri y Anclaflex. Precios especiales para colocadores.\n8. Asesoramiento y cálculo de materiales a partir de tu plano.\n9. Entrega en obra con vehículo propio, en Junín y la zona.\n10. Presupuestos de obra: mandanos el plano y te pasamos un presupuesto cerrado, con garantía de 3 meses.`],
+ ['google','Texto de voz · Reel pared con humedad (ElevenLabs, voz María Clara)',`[serious] ¿Tenés una pared con humedad? [short pause] Muchos te van a ofrecer paneles antihumedad... [short pause] pegados directo a la pared. [concerned] Pero así la humedad queda atrapada: [short pause] con el tiempo se mancha, se parte y se despega. [confident] Nosotros lo hacemos distinto. [short pause] Placa sobre perfiles omega, con una cámara de aire... [short pause] y una rejilla abajo para que la pared respire. [warm] Así los hongos no vuelven a salir. [short pause] ¿Tenés humedad en una pared? Escribinos y te decimos cómo resolverlo.`],
+ ['google','Texto para la voz femenina (ElevenLabs, voz Sol)',`[warm, excited] ¡Tenemos noticias! [short pause] Después de muchos años en Benito de Miguel 990... [short pause] nos mudamos a nuestro local propio. [warm] Te esperamos en Ángela Di Natale de Fulgenzi 56, esquina Francia, muy cerca de donde estábamos. [short pause] Más espacio, más stock y la misma atención de siempre. [short pause] Mientras terminamos la mudanza, te atendemos por teléfono, de 8 a 16. [proud] Muñoz Construcción en Seco. Nueva casa, mismo equipo.`],
+ /* proveedores */
+ ['proveedores','Mail · Proveedor: pedido de lista de precios',`Asunto: Muñoz Construcción en Seco: pedido de lista de precios\n\nEstimados [Nombre / equipo comercial de EMPRESA]:\n\nNos comunicamos desde Muñoz Construcción en Seco, de Junín. Hace 15 años trabajamos en construcción en seco, con venta de materiales y mano de obra propia en Junín y la zona.\n\nEstamos por abrir nuestro local propio y queremos sumar proveedores para [RUBRO / MARCAS: por ejemplo, perfilería, placas, PVC, steel frame].\n\nPor eso les pedimos que nos envíen:\n\n- Lista de precios vigente.\n- Condiciones comerciales: formas de pago, cuenta corriente, descuentos por volumen y compra mínima.\n- Plazos y costo de envío a Junín.\n- Catálogo o fichas técnicas, si los tienen.\n\nCon esa información armamos el primer pedido.\n\nQuedamos atentos.\n\nSaludos cordiales,\n\n[Tu nombre]\nMuñoz Construcción en Seco\nÁngela Di Natale de Fulgenzi 56, esq. Francia, Junín (Bs. As.)\nTel.: 2364 242318 / 2364 313228\npmconstruccionesventas@gmail.com\nmunoz-construcciones.github.io`],
+ ['proveedores','Mail · Proveedor: seguimiento a la semana',`Asunto: Re: Muñoz Construcción en Seco: pedido de lista de precios\n\nEstimados [Nombre / equipo comercial de EMPRESA]:\n\nLes escribimos para retomar el pedido de la semana pasada. Seguimos interesados en trabajar con ustedes y estamos definiendo los proveedores para la apertura del local.\n\n¿Nos podrían enviar la lista de precios y las condiciones comerciales? Si les resulta más cómodo, también podemos hablarlo por teléfono o por WhatsApp al 2364 242318.\n\nGracias.\n\nSaludos cordiales,\n\n[Tu nombre]\nMuñoz Construcción en Seco\nÁngela Di Natale de Fulgenzi 56, esq. Francia, Junín (Bs. As.)\nTel.: 2364 242318 / 2364 313228\npmconstruccionesventas@gmail.com`],
+ ['proveedores','WhatsApp · Proveedor: primer contacto',`Hola, ¿cómo están? Les escribimos de Muñoz Construcción en Seco, de Junín. Hace 15 años trabajamos en construcción en seco y estamos por abrir nuestro local propio.\n\nQueremos empezar a comprarles [RUBRO / MARCAS]. ¿Nos podrían pasar la lista de precios vigente y las condiciones (formas de pago, compra mínima y envío a Junín)?\n\nTambién nos pueden escribir a pmconstruccionesventas@gmail.com. ¡Gracias!`],
+ ['proveedores','WhatsApp · Proveedor: seguimiento',`Hola, ¿cómo están? Les escribimos de nuevo desde Muñoz Construcción en Seco (Junín) por la lista de precios que les pedimos. Estamos definiendo proveedores para la apertura del local y nos interesa trabajar con ustedes.\n\n¿Nos la podrían enviar por acá o a pmconstruccionesventas@gmail.com? ¡Muchas gracias!`],
+ ['proveedores','WhatsApp · Proveedor: pedir el contacto de ventas',`Hola, ¿cómo están? Somos Muñoz Construcción en Seco, de Junín. Queremos empezar a comprarles [RUBRO / MARCAS].\n\n¿Nos podrían pasar el contacto de la persona de ventas o del representante para nuestra zona? ¡Gracias!`]
+];
+
+/* profesionalización: etapa, id, título, por qué, pasos, costo, quién, lo arma Claude */
+const PRO=[
+['Antes de la reapertura (diciembre)',[
+ ['wcat','Catálogo en WhatsApp Business','El cliente ve los productos sin preguntar uno por uno y Agustina responde más rápido.',['Cargar 15 a 20 productos con foto propia: placas, perfiles, PVC, WPC, símil mármol, aislantes.','En el precio poner "Consultar" si no quieren mostrarlo.','Fijar el catálogo en el perfil y mandarlo como respuesta rápida.'],'$0','Agustina','Los textos de cada producto'],
+ ['gbp','Perfil de Google completo y activo','Es lo primero que aparece cuando alguien busca "durlock Junín". Un perfil completo y con movimiento sube en el mapa.',['Subir 20 fotos: obras, equipo, mostrador y el local nuevo cuando esté.','Cargar los productos y los 10 servicios.','Publicar una novedad por semana (podés reutilizar las placas).','Cargar 5 preguntas frecuentes con su respuesta.','Responder cada opinión en menos de 48 h, buena o mala.'],'$0','Paula','Las 5 preguntas con sus respuestas'],
+ ['ppto','Presupuesto con formato profesional','Un PDF prolijo con logo, condiciones y garantía transmite seriedad y evita discusiones después.',['Usar siempre el mismo modelo: datos del cliente, detalle, total, validez 15 días.','Incluir forma de pago (contado o transferencia), plazo y garantía de 3 meses.','Mandarlo en PDF, nunca como foto de un papel.'],'$0','Patricio y Agustina','El modelo de presupuesto'],
+ ['ig','Instagram ordenado: bio y destacadas','Quien entra al perfil por un reel decide en 5 segundos si escribe o se va.',['Bio: qué hacen, dónde, link a la web con la calculadora.','Destacadas: Obras · Materiales · Colocadores · Opiniones · Dónde estamos.','Portadas de destacadas en grafito con el ícono naranja.'],'$0','Paula','Texto de la bio y portadas de destacadas'],
+ ['firma','Firma de mail con la marca','Cada mail a arquitectos y empresas se ve como de empresa.',['Logo, nombre, teléfonos, dirección nueva y link a la web.','Configurarla en Gmail: Configuración → General → Firma.'],'$0','Paula','La firma lista para pegar'],
+ ['mkt','Publicar en Facebook Marketplace','Mucha gente de la zona busca materiales ahí, y es gratis.',['Publicar los 10 productos más pedidos con foto propia.','En la descripción: entrega en obra y WhatsApp.','Renovar las publicaciones cada semana.'],'$0','Agustina','Los textos de las publicaciones']
+]],
+['Reapertura (enero)',[
+ ['cartel','Local identificado desde la calle','El local propio es la mejor publicidad fija: que se vea desde Francia y desde Di Natale.',['Cartel frontal con el logo nuevo.','Vinilo en la vidriera: horario, WhatsApp y QR de la calculadora.','QR de opiniones de Google en el mostrador.'],'A presupuestar','Patricio','Diseño del vinilo y los carteles con QR'],
+ ['unif','Equipo y vehículo con la marca','Cada obra y cada entrega se vuelve publicidad. Además resuelve no mostrar la imagen vieja.',['Remeras o chombas con el logo nuevo para todo el equipo.','Ploteo del vehículo con logo, WhatsApp y "Entrega en obra".'],'A presupuestar','Patricio','Diseño del ploteo'],
+ ['evento','Puertas abiertas para colocadores y arquitectos','Convierte la mudanza en un encuentro con quienes más compran y recomiendan.',['Fijar fecha en la semana de la reapertura, a última hora de la tarde.','Invitar por WhatsApp y mail a colocadores, estudios y clientes.','Consultar a los proveedores si pueden mandar a alguien para una demostración.','Algo para comer, el incentivo de apertura y fotos para redes.'],'Bajo','Todos','Invitación, mensaje y guion del día'],
+ ['prensa','Nota en medios de Junín','Un comercio local que abre su local propio es noticia, y la nota da confianza gratis.',['Mandar una gacetilla con fotos a diarios, radios y portales de Junín.','Ofrecer una entrevista corta.'],'$0','Paula','La gacetilla']
+]],
+['Primeros 3 meses (febrero a abril)',[
+ ['post','Postventa: garantía y seguimiento','Un cliente bien atendido después de la obra recomienda y deja opinión.',['Entregar la tarjeta de garantía de 3 meses al terminar cada obra.','A los 7 días, mensaje de "¿Cómo quedó todo?".','A los 10 días, pedido de opinión en Google.'],'$0','Agustina','Tarjeta de garantía y mensajes'],
+ ['casos','Casos de obra en la web','Muestra resultados reales con datos y ayuda a aparecer en Google.',['Elegir 3 obras con fotos de antes y después.','Ficha de cada una: qué se hizo, m², plazo y materiales.','Subirlas a la web y compartirlas como carrusel.'],'$0','Paula','Las fichas y el cambio en la web'],
+ ['testi','Videos cortos de clientes','Un cliente contando su experiencia convence más que cualquier anuncio.',['Pedir a 3 clientes contentos 30 segundos con el celular.','Tres preguntas: qué necesitaban, cómo fue, si recomiendan.','Pedir permiso por escrito para publicarlo.'],'$0','Patricio','Guion de preguntas y edición'],
+ ['ref','Programa de recomendación para colocadores','El colocador que recomienda trae obras enteras.',['Definir el beneficio por cliente recomendado (descuento o material).','Contarlo en la lista de difusión y en el mostrador.','Anotar quién recomendó a quién en la planilla.'],'Según el beneficio','Patricio','Las reglas y el mensaje'],
+ ['alian','Alianzas con otros rubros','Inmobiliarias, constructoras y comercios que no venden seco pueden derivarles clientes.',['Hacer una lista de 10 posibles socios en Junín.','Visitarlos con la carpeta de obras.','Acordar derivación mutua o un beneficio para sus clientes.'],'$0','Patricio','La carpeta y el mensaje de presentación'],
+ ['origen','Saber de dónde viene cada cliente','Sin este dato no se sabe qué funciona ni dónde poner la plata.',['Preguntar siempre "¿Cómo nos conociste?".','Anotarlo en la planilla: Instagram, Google, anuncio, recomendación, cartel.','Revisarlo cada lunes con los 3 números.'],'$0','Agustina','Agregar la columna a la planilla']
+]],
+['Para sostener la imagen profesional',[
+ ['dom','Dominio y mail propios','"ventas@munoz…" da más confianza a empresas que una casilla de Gmail.',['Verificar si el nombre está libre en nic.ar y su costo anual.','Conectar el dominio a la web actual.','Crear la casilla de mail con el dominio.'],'Costo anual (ver en nic.ar)','Paula','Los pasos de conexión'],
+ ['li','Página de empresa en LinkedIn','Es donde están los encargados de obra y las empresas.',['Crear la página con logo, portada y descripción de Google.','Publicar los casos de obra y la placa de empresas.'],'$0','Paula','Textos y portada'],
+ ['manual','Manual de marca de una página','Para que cualquiera que haga una pieza (imprenta, ploteo, cartel) use los mismos colores y el logo correcto.',['Reunir logo, colores, letras y usos correctos e incorrectos.','Mandarlo a cada proveedor de cartelería o indumentaria.'],'$0','Paula','El manual en PDF']
+]],
+['Trabajar mejor con Claude (ideas de la guía de Claura)',[
+ ['cerebro','Cerebro de marca en el Proyecto','Si Claude siempre tiene la marca a mano, el tono no se pierde entre conversaciones.',['Cargar en las instrucciones del Proyecto: público, voz, palabras que se usan y que no.','Sumar 3 o 4 pies o mensajes que funcionaron, con una línea de por qué.','Actualizarlo cuando cambie algo (dirección, precios, servicios).'],'$0','Paula','El texto de instrucciones del Proyecto'],
+ ['resp','Respuestas listas para las 10 preguntas más comunes','Agustina responde igual de bien y en segundos, aunque esté sola en el mostrador.',['Anotar durante una semana las preguntas que más se repiten.','Escribir una respuesta para cada una.','Cargarlas como respuestas rápidas en WhatsApp Business.'],'$0','Agustina','Las 10 respuestas'],
+ ['comp','Mirar los anuncios de la competencia una vez por mes','Muestra qué ofrecen y cómo hablan los otros comercios de Junín, para diferenciarse.',['Buscar a cada competidor en la Biblioteca de anuncios de Meta.','Sacar captura de los anuncios activos.','Pasármelos y te armo la comparación con ideas para diferenciarnos.'],'$0','Paula','La comparación mensual'],
+ ['misterio','Cliente misterioso','Probar la web y el WhatsApp como si fueran un cliente muestra dónde se pierden consultas.',['Una vez por mes, alguien de confianza consulta por WhatsApp y usa la calculadora de la web.','Anotar: cuánto tardaron en responder, si pidieron el plano, si hubo seguimiento.','Corregir lo que falle.'],'$0','Paula','La lista de control para la prueba'],
+ ['simular','Probar el anuncio antes de pagar','Antes de poner plata, ver cómo lo leería un cliente real de Junín.',['Pasarme el anuncio y el perfil de cliente.','Te devuelvo las dudas y objeciones probables, y una versión mejorada.'],'$0','Paula','La simulación y la versión mejorada'],
+ ['opin','Convertir las opiniones en contenido','Las palabras de los clientes son los mejores ganchos para reels y anuncios.',['Juntar las opiniones de Google y los mensajes lindos de WhatsApp.','Elegir frases (con permiso) para placas y ganchos.'],'$0','Paula','Las placas con las frases']
+]]
+];
+const MCAT={todos:'Todos',pies:'Pies de publicación',clientes:'WhatsApp y prospección',opiniones:'Opiniones en Google',google:'Google y voz',proveedores:'Proveedores'};
+
+/* agenda: fecha ISO -> tareas */
+const A={
+'2026-11-23':['Historias: encuesta "¿Qué te gustaría agregar a tu casa?"','Configurar WhatsApp Business: bienvenida, respuestas rápidas y etiquetas','Armar la planilla de consultas','Control de los 3 números (lunes)'],
+'2026-11-24':['Definir con Patricio la lista de precios para colocadores','Crear el Perfil de Empresa de Google'],
+'2026-11-25':['Publicar Reel Capítulo 3 con su pie','Carrusel: ¿Placa común o resistente a la humedad? (si no da el tiempo, pasarlo al jueves)','Pedir a Patricio fotos de omegas, cámara de aire y rejilla en la próxima obra con humedad'],
+'2026-11-26':['Historia: un pedido saliendo en el vehículo','Armar muestrario y carpeta de 5 obras terminadas','Publicar Reel pared con humedad con su pie (está en Mensajes → Pies)'],
+'2026-11-27':['Reel: antes y después de una obra','Reenviar a los arquitectos el mail con el PDF adjunto'],
+'2026-11-28':['Publicar el anuncio de colocadores (sin pauta)','Mandarlo por WhatsApp a los colocadores'],
+'2026-11-29':['Descanso: solo responder mensajes','Sacar fotos o video del local nuevo'],
+'2026-11-30':['Publicar "¿Necesitás un cuarto más?" y activar pauta ($1.300 por día)','Visitar obras: 10 colocadores','Control de los 3 números (lunes)'],
+'2026-12-01':['Historia: "¿Qué te gustaría encontrar en nuestro local?"','Crear la lista de difusión "Colocadores Muñoz"'],
+'2026-12-02':['Publicar Capítulo 4 (teaser) con su pie','Seguimiento por WhatsApp a los arquitectos'],
+'2026-12-03':['Carrusel: 5 errores que arruinan una pared de durlock (errores de Patricio)'],
+'2026-12-04':['Publicar "Precio cerrado" y activar segundo anuncio ($1.300 por día)'],
+'2026-12-05':['Reel: una pared completa en 15 segundos'],
+'2026-12-06':['Descanso','Dejar listos el Capítulo 5 y la placa'],
+'2026-12-07':['Reel: ¿Cuánto se tarda en hacer un cuarto en seco? (sin nombrar a nadie)','Mandar 15 mensajes a empresas','Control de los 3 números (lunes)'],
+'2026-12-08':['Historia: "Mañana les contamos algo grande"'],
+'2026-12-09':['Publicar Capítulo 5 + placa de la mudanza','Reenviarlo por WhatsApp a todos los contactos'],
+'2026-12-10':['Carrusel: Steel frame o ladrillo, 5 diferencias','Visitas a 3 estudios de arquitectura'],
+'2026-12-11':['Reel: el equipo trabajando'],
+'2026-12-12':['Historias: comentarios lindos del anuncio'],
+'2026-12-13':['Revisar los anuncios y apagar el que trajo menos consultas'],
+'2026-12-14':['Reel: así va nuestro local propio','Llamar a todos los presupuestos sin respuesta','Control de los 3 números (lunes)'],
+'2026-12-15':['Historias del día'],
+'2026-12-16':['Reel: ¿Qué es construir en seco? en 20 segundos'],
+'2026-12-17':['Carrusel: Calculá tu obra en 3 pasos desde la web'],
+'2026-12-18':['Publicar placa de empresas y mandarla por mail'],
+'2026-12-19':['Reel: antes y después de otra obra','Segunda ronda de visitas: 10 colocadores'],
+'2026-12-20':['Historias del día','Pedir opinión en Google a los clientes que cerraron obra'],
+'2026-12-21':['Reel: faltan pocos días (avance del local)','Control de los 3 números (lunes)'],
+'2026-12-22':['Carrusel: Antes de arrancar tu obra, 5 cosas'],
+'2026-12-23':['Reel: saludo de fin de año del equipo'],
+'2026-12-24':['Historia de saludo y días sin atención'],
+'2026-12-25':['Historia de saludo'],
+'2026-12-26':['Descanso','Definir la fecha de reapertura'],
+'2026-12-27':['Descanso','Definir con Patricio el incentivo de apertura'],
+'2026-12-28':['Reel: primera vista del local nuevo','Control de los 3 números (lunes)'],
+'2026-12-29':['Carrusel: lo que vas a encontrar en el local nuevo'],
+'2026-12-30':['Reel: día de mudanza'],
+'2026-12-31':['Historia: saludo de Año Nuevo + "Faltan X días"'],
+'2027-01-01':['Descanso'],
+'2027-01-02':['Historia: "Faltan X días"'],
+'2027-01-03':['Reel: Abrimos el [fecha] + incentivo','Avisarme para actualizar la web y Google']
+};
+
+
+/* fotos que hacen falta para cada publicación (fecha de publicación -> lista) */
+const FOTOS={
+'2026-11-25':['Para la versión final del reel de humedad: pared con humedad antes, omegas colocados, la cámara de aire vista desde un costado, la rejilla abajo (cerca y lejos) y la pared terminada desde el mismo lugar'],
+'2026-11-26':['Video vertical del vehículo cargado saliendo del local (10 s)','Foto del pedido armado antes de cargar'],
+'2026-11-27':['Una obra: foto ANTES y foto DESPUÉS desde el mismo lugar y ángulo','Celular en vertical, con buena luz de día'],
+'2026-11-29':['Fotos y videos del local nuevo: fachada desde la esquina, interior vacío, detalles de la obra'],
+'2026-12-03':['5 fotos de errores reales (placa sin tratar, junta mal hecha, tornillo pasado, humedad, perfil mal fijado) o la pared bien hecha para comparar'],
+'2026-12-05':['Video vertical de una pared completa: estructura, placas y terminación (clips de 3 a 5 s en cada etapa)','Celular fijo, siempre desde el mismo lugar'],
+'2026-12-07':['Clips de las etapas de un cuarto: perfiles, placas, masillado, pintura','Foto del cuarto terminado con luz natural'],
+'2026-12-10':['Foto de una obra en steel frame y una de una obra tradicional (puede ser de internet libre o propia)','Primer plano de un perfil y de una placa'],
+'2026-12-11':['Video del equipo trabajando: 4 o 5 clips cortos, con ropa de la marca, sin mostrar la imagen vieja'],
+'2026-12-14':['Avance del local nuevo: mismo encuadre que la semana anterior para comparar'],
+'2026-12-16':['Clips cortos de materiales: perfil, placa, tornillo, masilla; y una pared armada'],
+'2026-12-17':['Captura de pantalla de la calculadora de la web, paso por paso (desde el celular)'],
+'2026-12-19':['Otra obra: ANTES y DESPUÉS desde el mismo ángulo'],
+'2026-12-21':['Avance del local: estanterías, mostrador, cartel'],
+'2026-12-22':['Foto de un plano sobre la mesa, cinta métrica y materiales (para la portada del carrusel)'],
+'2026-12-23':['Foto o video grupal del equipo frente al local nuevo, con ropa de la marca'],
+'2026-12-28':['Recorrido en video del local nuevo, de la puerta al mostrador (20 s, caminando despacio)'],
+'2026-12-29':['Fotos de cada sector del local: placas, perfiles, PVC, WPC, símil mármol, herramientas'],
+'2026-12-30':['Clips del día de mudanza: carga, descarga, primeras estanterías llenas'],
+'2027-01-03':['Foto de la fachada terminada y del equipo en la puerta para anunciar la apertura']
+};
+const nextISO=iso=>{const [y,m,d]=iso.split('-').map(Number);const t=new Date(y,m-1,d+1);return `${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`};
+/* ---------- VISTAS ---------- */
+const V={};
+V.marca=()=>`<h2>Decisiones de marca</h2><p class="lead">Lo que ya está definido y se usa en todas las piezas. Si algo cambia, se cambia acá primero.</p>
+<h3>Colores</h3><div class="grid">${COLORES.map(([n,h,u])=>`<div class="box"><div class="sw" style="background:${h}"></div><b>${n}</b><span class="mono">${h}</span><p style="font-size:14px;color:var(--ink2);margin-top:6px">${u}</p></div>`).join('')}</div>
+<p class="note">Nada de azul ni de rojo: son de la identidad vieja. El naranja resalta una sola idea por pieza.</p>
+<h3>Letras</h3><table class="stack"><thead><tr><th>Dónde</th><th>Letra</th><th>Cómo</th></tr></thead><tbody>
+<tr><td>Reels, placas y carruseles</td><td><span class="cond" style="font-size:22px;font-weight:800">Barlow Condensed</span></td><td>Títulos en ExtraBold o Bold y en MAYÚSCULAS; textos chicos en Medium.</td></tr>
+<tr><td>Web y documentos</td><td>Archivo + Inter</td><td>Archivo para títulos, Inter para el texto.</td></tr></tbody></table>
+<h3>Logo</h3><div class="grid"><div class="box" style="background:#1e2629"><img src="media/logo.png" alt="Logo nuevo de Muñoz" style="width:100%;max-width:260px"></div><div class="box"><b>Siempre el logo nuevo</b><p style="font-size:15px">Techo naranja sobre la M blanca, "MUÑOZ" y "CONSTRUCCIÓN EN SECO". Va sobre fondo oscuro o foto oscurecida, arriba a la izquierda en redes.</p><p style="font-size:15px"><b>Nunca</b> el logo viejo (MM azul y rojo), ni fotos con el cartel viejo, la camioneta o gorras con el diseño anterior.</p></div></div>
+<h3>Estética de los reels</h3><table class="stack"><thead><tr><th>Elemento</th><th>Decisión</th></tr></thead><tbody>
+<tr><td>Formatos</td><td>Reel 1080 × 1920 · placa de feed 1080 × 1350 · serie de la mudanza numerada como "Capítulo 1, 2, 3…".</td></tr>
+<tr><td>Textos en pantalla</td><td>Bloques: un renglón blanco sobre caja grafito y la palabra clave sobre caja naranja (NOS / <b>MUDAMOS</b>).</td></tr>
+<tr><td>Estilo "Plano"</td><td>Foto dentro de un marco naranja que se dibuja solo, línea blanca interior, marcas de esquina, regla con medidas y franja naranja de transición. Se usa en el Capítulo 5 y en los anuncios.</td></tr>
+<tr><td>Estilo "Cinta de obra"</td><td>Foto a pantalla completa, texto que entra renglón por renglón con resaltador naranja, cinta a rayas naranja y grafito en las transiciones y "56" gigante para la dirección. Variante nueva del Capítulo 5, pendiente de la voz femenina.</td></tr>
+<tr><td>Etiquetas en las fotos</td><td>"NUESTRAS OBRAS", "NUESTRO EQUIPO" o "NUESTRO LOCAL ACTUAL", para que ninguna obra parezca el local nuevo.</td></tr>
+<tr><td>Siempre a la vista</td><td>Logo arriba a la izquierda, "Capítulo N" o "Junín y la zona" arriba a la derecha, @munoz.construccion y el WhatsApp abajo, barra de progreso naranja.</td></tr>
+<tr><td>Cierre</td><td>Logo que entra con un golpe + pedido concreto + WhatsApp.</td></tr>
+<tr><td>Ritmo</td><td>Texto grande en el primer segundo, reels de 14 a 31 segundos, una idea por reel.</td></tr>
+<tr><td>Música</td><td>"Corporate Advertising" de Pixabay (sin marca de agua, uso libre). Nunca temas con marca de agua.</td></tr>
+<tr><td>Voces</td><td>Diego (Casual & Friendly) en los capítulos y anuncios. María Clara (femenina) en el reel de humedad. Alternativa femenina: Sol – Warm Publicity | Argentina. Siempre en Eleven v3.</td></tr></tbody></table>
+<h3>Voz y pedidos</h3><table class="stack"><thead><tr><th>Para</th><th>Frase de cierre aprobada</th></tr></thead><tbody>
+<tr><td>Particulares</td><td>"Mandanos el plano y te pasamos el presupuesto."</td></tr>
+<tr><td>Colocadores</td><td>"Escribinos qué necesitás y te pasamos precios."</td></tr>
+<tr><td>Empresas</td><td>"Mandanos el cómputo y te pasamos la cotización."</td></tr>
+<tr><td>Web</td><td>"Calculá tu obra gratis."</td></tr></tbody></table>
+<p>Voseo rioplatense, palabras simples y datos concretos (15 años, garantía de 3 meses, entrega en obra). Se habla como equipo: <b>no se nombra a Patricio</b> en la comunicación pública.</p>
+<h3>Datos del comercio</h3><table class="stack"><thead><tr><th>Dato</th><th>Valor</th></tr></thead><tbody>
+<tr><td>Dirección nueva</td><td>Ángela Di Natale de Fulgenzi 56, esquina Francia, Junín</td></tr>
+<tr><td>Dirección actual</td><td>Benito de Miguel 990 (desde 2018)</td></tr>
+<tr><td>Teléfonos</td><td>Local 2364 242318 · Obras 2364 313228 · atención telefónica de 8 a 16</td></tr>
+<tr><td>Web</td><td><a href="https://munoz-construcciones.github.io/">munoz-construcciones.github.io</a> (con calculadora de obra)</td></tr>
+<tr><td>Redes</td><td>Instagram @munoz.construccion · Facebook · mail pmconstruccionesventas@gmail.com</td></tr>
+<tr><td>Opiniones en Google</td><td>g.page/r/CeXHeLOC4CdJEBM/review</td></tr></tbody></table>`;
+
+let RF='todos';
+V.reels=()=>`<h2>Reels y placas definitivos</h2><p class="lead">Las versiones finales para publicar. Tocá "Descargar" para guardarlas en tu equipo.</p>
+<div class="filters" id="rf">${[['todos','Todos'],['mudanza','Mudanza'],['anuncios','Anuncios y captación']].map(([k,n])=>`<button data-k="${k}" class="${RF===k?'on':''}">${n}</button>`).join('')}</div>
+<div class="reels">${REELS.filter(r=>RF==='todos'||r.c===RF).map(r=>`<div class="reel">${r.v&&!r.falta?`<video src="media/${r.f}.mp4" poster="media/${r.f}.jpg" controls preload="none" playsinline></video>`:r.falta?`<img class="sq" src="media/${r.f}.jpg" alt="${esc(r.t)}">`:`<img class="sq" src="media/${r.f}.jpg" alt="${esc(r.t)}">`}<div class="in"><span class="tag">${r.c==='mudanza'?'Mudanza':'Captación'}</span><b>${esc(r.t)}</b><small>${esc(r.d)}</small>${r.falta?`<small style="margin-top:auto;color:var(--accd)">Video pendiente de subir a esta versión del tablero.</small>`:`<button class="btn" data-dl="${r.f}.${r.ext||'mp4'}" style="margin-top:auto">Descargar</button>`}</div></div>`).join('')}</div>
+<p class="note">Los Capítulos 1, 2 y 3 se armaron en otras conversaciones y ya están publicados: para bajarlos, entrá a esa conversación y tocá la tarjeta del archivo. Pendiente: Capítulo 5 en estilo "Cinta de obra" con voz femenina.</p><p class="st" id="dlst"></p>`;
+
+let MF='todos';
+V.mensajes=()=>`<h2>Mensajes listos para copiar</h2><p class="lead">Reemplazá lo que está entre corchetes antes de enviar. Con el nombre del cliente, responden mucho más.</p>
+<div class="filters" id="mf">${Object.entries(MCAT).map(([k,n])=>`<button data-k="${k}" class="${MF===k?'on':''}">${n}</button>`).join('')}</div>
+<p style="margin:0 0 14px"><button class="btn g" data-dlall="1">Descargar ${MF==='todos'?'todos los mensajes':'los de '+MCAT[MF]} (.txt)</button></p>
+${M.map((m,i)=>[m,i]).filter(([m])=>MF==='todos'||m[0]===MF).map(([m,i])=>`<div class="msg"><div class="h"><b>${esc(m[1])}</b><span style="display:flex;gap:6px"><button class="btn g" data-cp="${i}">Copiar</button><button class="btn g" data-dlm="${i}">Descargar</button></span></div><pre>${esc(m[2])}</pre></div>`).join('')}`;
+
+V.plan=()=>`<h2>Plan de captación y redes</h2><p class="lead">Objetivo: que el 100 % de las acciones traiga consultas, presupuestos y cuentas nuevas. Con menos de $50.000 por mes de pauta, el dinero va a particulares y el tiempo a colocadores y arquitectos.</p>
+<h3>Matriz de captación</h3><table class="stack"><thead><tr><th>Perfil</th><th>Canal</th><th>Gancho</th><th>Pedido</th></tr></thead><tbody>
+<tr><td>Particulares</td><td>Anuncios de Meta a WhatsApp, calculadora de la web, Perfil de Google</td><td>Cálculo gratis y presupuesto cerrado de obra terminada</td><td>"Mandanos el plano"</td></tr>
+<tr><td>Colocadores</td><td>Visitas en obra, lista de difusión de WhatsApp</td><td>Entrega en obra + lista de precios para colocadores</td><td>"Escribinos qué necesitás"</td></tr>
+<tr><td>Arquitectos</td><td>Mail con presentación + WhatsApp, visita con muestrario</td><td>Visita técnica y cronograma por escrito en la primera obra</td><td>"¿Te dejo el muestrario?"</td></tr>
+<tr><td>Empresas</td><td>Mail o LinkedIn al encargado de obra</td><td>Cotización en 24 h, precio sostenido 15 días, entregas programadas</td><td>"Mandanos el cómputo"</td></tr></tbody></table>
+<h3>Reparto de tiempo y pauta</h3><div class="k">
+<div class="box"><b>35 %</b>del tiempo a colocadores · $0 de pauta</div>
+<div class="box"><b>25 %</b>a particulares · $40.000: 2 anuncios de $1.300 por día durante 15 días</div>
+<div class="box"><b>25 %</b>a arquitectos · $0 de pauta</div>
+<div class="box"><b>15 %</b>a empresas · $10.000 si se prueba un anuncio</div></div>
+<h3>Quién hace qué</h3><table class="stack"><thead><tr><th>Persona</th><th>Tareas</th></tr></thead><tbody>
+<tr><td>Agustina</td><td>Responde WhatsApp en menos de 15 minutos, carga cada consulta en la planilla, hace los seguimientos a los 2 días, sube las historias.</td></tr>
+<tr><td>Patricio</td><td>Visitas a obras, colocadores y estudios; define precios, condiciones y los datos técnicos.</td></tr>
+<tr><td>Paula</td><td>Publicaciones, anuncios, lista de difusión, mails a estudios y empresas, y el control de cada lunes.</td></tr></tbody></table>
+<h3>Ritmo de redes por semana</h3><table class="stack"><thead><tr><th>Formato</th><th>Cantidad</th><th>Para qué</th></tr></thead><tbody>
+<tr><td>Reels</td><td>3</td><td>Llegar a gente que no los sigue</td></tr><tr><td>Carrusel</td><td>1</td><td>Que lo guarden</td></tr><tr><td>Historias</td><td>2 o 3 por día</td><td>Mantener el vínculo</td></tr><tr><td>Placa suelta</td><td>Solo avisos</td><td>Informar</td></tr></tbody></table>
+<p><b>Las 6 reglas de cada reel:</b> texto grande en el primer segundo · 15 a 30 segundos y una idea · material propio, sin marcas de agua · cerrar con un pedido concreto · etiquetar al arquitecto o colocador · siempre construcción en seco.</p>
+<p><b>Rutina diaria (15 min):</b> publicar lo del día · 2 o 3 historias · responder todo en la primera hora · compartir en las historias del equipo · sacar una foto o video para la semana siguiente. Horarios: 12 a 13 h o 19 a 21 h.</p>
+<h3>Los 3 números de cada lunes</h3><div class="k">
+<div class="box"><b>15</b>consultas calificadas por semana</div><div class="box"><b>30 %</b>de presupuestos aceptados</div><div class="box"><b>3</b>clientes nuevos por semana</div></div>
+<h3>Calendario de la saga de la mudanza</h3><table class="stack"><thead><tr><th>Fecha</th><th>Pieza</th></tr></thead><tbody>
+<tr><td>Mié 2/12</td><td>Capítulo 4 · teaser</td></tr><tr><td>Mié 9/12</td><td>Capítulo 5 · ¡Nos mudamos! + placa</td></tr><tr><td>14 al 27/12</td><td>Avances del local nuevo y reels educativos</td></tr><tr><td>28/12 al 3/1</td><td>Cuenta regresiva hasta la reapertura</td></tr><tr><td>Desde la apertura</td><td>Cambiar textos de la web y Google: avisarme</td></tr></tbody></table>
+<h3>Pendientes con Patricio</h3><ul><li>Precios para colocadores y beneficio por recomendación.</li><li>Los 5 errores del carrusel del 3/12.</li><li>Medidas reales del wall panel WPC y del símil mármol, y cómo se fijan.</li><li>Fecha de reapertura e incentivo de apertura.</li><li>Si pueden cumplir la entrega en el día para colocadores.</li></ul>
+<h3>Documentos completos</h3><p><a href="https://claude.ai/artifact/HW8vyi3kzutwFH6oM7Pj7e">Plan de captación de clientes</a> · <a href="https://claude.ai/artifact/1tvWYncixB5WgfeoWfHE2G">Programa diario de redes (con guiones de carruseles)</a></p>`;
+
+
+let PS={};try{PS=JSON.parse(localStorage.getItem('munozPro')||'{}')}catch(_){}
+V.crecer=()=>{const all=PRO.flatMap(g=>g[1]);const ok=all.filter(x=>PS[x[0]]).length;
+return `<h2>Para crecer y verse más profesionales</h2><p class="lead">Lo que todavía no hicimos y suma imagen de empresa. Está ordenado por etapa; tildá cada punto cuando esté hecho. Donde dice "Lo armo yo", pedímelo y te lo paso listo.</p>
+<div class="st">${ok} de ${all.length} hechos</div><div class="bar"><i style="width:${Math.round(ok/all.length*100)}%"></i></div>
+${PRO.map(([et,items])=>`<h3>${esc(et)}</h3>${items.map(([id,t,por,pasos,costo,quien,yo])=>`<div class="pro ${PS[id]?'ok':''}"><label class="ph"><input type="checkbox" data-pro="${id}" ${PS[id]?'checked':''}><span><b class="pt">${esc(t)}</b><p>${esc(por)}</p></span></label><div class="meta"><span class="tag">Costo: ${esc(costo)}</span><span class="tag">Quién: ${esc(quien)}</span><span class="tag">Lo armo yo: ${esc(yo)}</span></div><ol>${pasos.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>`).join('')}`).join('')}`};
+
+/* ---------- PESTAÑAS ---------- */
+async function bajarTxt(nombre,texto){const fn=nombre.replace(/[\\/:*?"<>|·]/g,'').replace(/\s+/g,' ').trim()+'.txt';try{const d=await claude.use('downloads');if(!d)throw 0;await d.save({filename:fn,data:new Blob([texto],{type:'text/plain;charset=utf-8'})})}catch(_){try{await navigator.clipboard.writeText(texto)}catch(__){}}}
+const TABS=['marca','reels','mensajes','plan','crecer'];
+function show(t){if(!TABS.includes(t))t='plan';$('main').innerHTML=`<div class="tabp">${V[t]()}</div>`;document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(location.hash!=='#'+t)history.replaceState(null,'','#'+t)}
+$('nav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.t)});
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+$('main').addEventListener('change',e=>{const c=e.target.closest('[data-pro]');if(!c)return;PS[c.dataset.pro]=c.checked;try{localStorage.setItem('munozPro',JSON.stringify(PS))}catch(_){}
+  if(window._db)window._db.doc('pro/estado').set(PS).catch(()=>{});show('crecer')});
+$('main').addEventListener('click',async e=>{
+  const f=e.target.closest('#rf button');if(f){RF=f.dataset.k;show('reels');return}
+  const g=e.target.closest('#mf button');if(g){MF=g.dataset.k;show('mensajes');return}
+  const dl1=e.target.closest('[data-dlm]');if(dl1){const m=M[+dl1.dataset.dlm];bajarTxt(m[1],m[2]);return}
+  const da=e.target.closest('[data-dlall]');if(da){const L=M.filter(m=>MF==='todos'||m[0]===MF);bajarTxt('Mensajes Muñoz - '+MCAT[MF],L.map(m=>'=== '+m[1]+' ===\n\n'+m[2]).join('\n\n\n'));return}
+  const c=e.target.closest('[data-cp]');if(c){try{await navigator.clipboard.writeText(M[+c.dataset.cp][2]);c.textContent='¡Copiado!';setTimeout(()=>c.textContent='Copiar',1500)}catch(_){c.textContent='Seleccioná y copiá'}return}
+  const d=e.target.closest('[data-dl]');if(d){const st=$('dlst');try{const dl=await claude.use('downloads');if(!dl)throw 0;d.textContent='Preparando…';const r=await fetch('media/'+d.dataset.dl);const blob=await r.blob();await dl.save({filename:d.dataset.dl,data:blob});d.textContent='Descargar'}catch(_){d.textContent='Descargar';st.textContent='Si la descarga no arranca, tocá el video y usá los tres puntitos → Descargar.'}}
+});
+show(location.hash.slice(1)||'plan');
+
+/* ---------- LIBRETA DE OBRA ---------- */
+const days=Object.keys(A);
+const pad=n=>String(n).padStart(2,'0');
+const now=new Date();const todayISO=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+const DN=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const lab=iso=>{const [y,m,d]=iso.split('-').map(Number);const dt=new Date(y,m-1,d);return `${DN[dt.getDay()]} ${d}/${m}`};
+let S={};let db=null;let open=new Set([days.includes(todayISO)?todayISO:days[0]]);
+try{S=JSON.parse(localStorage.getItem('munozAgenda')||'{}')}catch(_){}
+const get=d=>S[d]||(S[d]={done:[],note:'',extra:[]});
+function item(d,i,txt){const s=get(d);const ok=s.done.includes(i);return `<label class="it ${ok?'ok':''}"><input type="checkbox" data-d="${d}" data-i="${i}" ${ok?'checked':''}><span>${esc(txt)}</span></label>`}
+
+function fotoBox(t){const n=nextISO(t),n2=nextISO(n);const parts=[];
+  if(FOTOS[t])parts.push(`<div style="margin-top:10px;color:#fc6320;font-weight:700">📸 Fotos para la publicación de hoy</div>${FOTOS[t].map(x=>`<div>• ${esc(x)}</div>`).join('')}`);
+  if(FOTOS[n])parts.push(`<div style="margin-top:10px;color:#fc6320;font-weight:700">📸 Sacá hoy para mañana (${lab(n)})</div>${FOTOS[n].map(x=>`<div>• ${esc(x)}</div>`).join('')}`);
+  else if(FOTOS[n2])parts.push(`<div style="margin-top:10px;color:#fc6320;font-weight:700">📸 Para pasado mañana (${lab(n2)})</div>${FOTOS[n2].map(x=>`<div>• ${esc(x)}</div>`).join('')}`);
+  return parts.join('')}
+function renderAg(){
+  const t=days.includes(todayISO)?todayISO:null;
+  $('today').innerHTML=t?`<div class="d">Hoy · ${lab(t)}</div>${A[t].concat(get(t).extra).map((x,i)=>`<div>• ${esc(x)}</div>`).join('')}${fotoBox(t)}`:`<div class="d">${todayISO<days[0]?'Arranca el 23/11':'Programa cumplido'}</div><div>La libreta va del 23/11 al 3/1.</div>`;
+  $('agenda').innerHTML=days.map(d=>{const s=get(d);const all=A[d].concat(s.extra);const n=s.done.length;const op=open.has(d);
+    return `<div class="day ${n>=all.length&&all.length?'done':''} ${d===todayISO?'is-today':''}"><div class="dh" data-tg="${d}"><b>${lab(d)}</b><span class="cnt">${FOTOS[d]?'📸 ':''}${n}/${all.length} ${op?'▾':'▸'}</span></div>${op?`<div>${all.map((x,i)=>item(d,i,x)).join('')}${FOTOS[d]?`<div class="fotos"><b>📸 Fotos que hacen falta</b>${FOTOS[d].map(x=>`<div>• ${esc(x)}</div>`).join('')}</div>`:''}<div class="addrow"><input type="text" placeholder="Agregar tarea" data-add="${d}" aria-label="Agregar tarea al ${lab(d)}"><button class="btn" data-addb="${d}">+</button></div><textarea data-note="${d}" placeholder="Notas: qué se hizo, consultas, resultados…">${esc(s.note)}</textarea></div>`:''}</div>`}).join('');
+}
+let tm=null;
+function save(d){try{localStorage.setItem('munozAgenda',JSON.stringify(S))}catch(_){}
+  if(db&&d){clearTimeout(tm);const v=get(d);tm=setTimeout(()=>{db.doc('agenda/'+d).set(v).then(()=>$('st').textContent='Guardado en la nube ✓').catch(()=>$('st').textContent='No se pudo guardar en la nube; queda en este navegador.')},500)}}
+const ag=$('agenda');
+ag.addEventListener('click',e=>{const t=e.target.closest('[data-tg]');if(t){const d=t.dataset.tg;open.has(d)?open.delete(d):open.add(d);renderAg();return}
+  const b=e.target.closest('[data-addb]');if(b){const d=b.dataset.addb;const inp=ag.querySelector(`[data-add="${d}"]`);const v=inp.value.trim();if(v){get(d).extra.push(v);save(d);renderAg()}}});
+ag.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset.add){e.preventDefault();const d=e.target.dataset.add;const v=e.target.value.trim();if(v){get(d).extra.push(v);save(d);renderAg()}}});
+ag.addEventListener('change',e=>{const c=e.target;if(c.type!=='checkbox')return;const s=get(c.dataset.d),i=+c.dataset.i;s.done=c.checked?[...new Set([...s.done,i])]:s.done.filter(x=>x!==i);save(c.dataset.d);renderAg()});
+ag.addEventListener('input',e=>{const n=e.target.dataset.note;if(n){get(n).note=e.target.value;save(n)}});
+renderAg();
+(async()=>{try{const d=await claude.use('db');if(!d)return;db=d;window._db=d;$('st').textContent='Conectando con la nube…';
+  db.doc('pro/estado').onSnapshot(x=>{const v=x&&x.data&&x.data();if(v){PS=v;if(location.hash==='#crecer')show('crecer')}},()=>{});
+  const to=setTimeout(()=>{$('st').textContent='Guardando en este navegador.'},10000);
+  db.collection('agenda').onSnapshot(snap=>{clearTimeout(to);snap.docs.forEach(x=>{const v=x.data();S[x.id]={done:v.done||[],note:v.note||'',extra:v.extra||[]}});
+    if(!document.activeElement||!document.activeElement.dataset||!document.activeElement.dataset.note)renderAg();$('st').textContent='Guardado en la nube: lo ven todos los que tienen el link ✓'},()=>{$('st').textContent='Guardando en este navegador.'})}catch(_){}})();
+}
+</script>
+</body>
+</html>

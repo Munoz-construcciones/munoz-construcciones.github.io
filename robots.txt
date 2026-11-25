@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /tablero/
 
 Sitemap: https://munoz-construcciones.github.io/sitemap.xml
