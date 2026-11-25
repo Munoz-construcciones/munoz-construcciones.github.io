@@ -276,6 +276,33 @@ function leerLocal(text){
   let csv=false;
   const csvSplit=l=>{const r=[];let cur='',q=false;for(const ch of l){if(ch==='"'){q=!q}else if(ch===','&&!q){r.push(cur.trim());cur=''}else cur+=ch}r.push(cur.trim());return r};
   const partir=l=>{if(csv)return csvSplit(l);let c=l.split(/\t|\s{2,}|\s\|\s|\|/).map(x=>x.trim()).filter(Boolean);if(c.length<2&&l.includes(',')&&!/\d,\d/.test(l)){const k=csvSplit(l);if(k.some(x=>/^cant/i.test(x)))csv=true;c=k}return c};
+  /* Encabezado: ordena las columnas (código, cantidad, descripción, IVA, precio, total) y lee cada renglón en ese orden */
+  const KW=[['cod',/c[oó]d(igo)?\b|c[oó]d\./],['cant',/\bcant(idad)?\b|\bcant\./],['desc',/descripci[oó]n|detalle|art[ií]culo|producto|material/],['iva',/%\s*iva|\biva\b/],['unit',/unit|precio|p\.\s?u\.?/],['total',/\$?\s*total|importe|subtotal/]];
+  const lines=text.split(/\r?\n/);let hi=-1,cols=[];
+  for(let i=0;i<lines.length;i++){const L=lines[i].toLowerCase();if(!/\bcant/.test(L))continue;
+    const f=[];for(const [k,re] of KW){const m=L.match(re);if(m)f.push([k,m.index])}
+    if(f.length>=2&&f.some(x=>x[0]==='desc')){cols=f.sort((x,y)=>x[1]-y[1]).map(x=>x[0]);hi=i;break}}
+  if(hi>=0){
+    const di=cols.indexOf('desc'),left=cols.slice(0,di),right=cols.slice(di+1);
+    const esN=t=>/^\$?-?\d[\d.,]*$/.test(t);
+    const sp=l=>{const r=[];let cur='',q=false;for(const ch of l){if(ch==='"'){q=!q}else if(ch===','&&!q){r.push(cur.trim());cur=''}else cur+=ch}r.push(cur.trim());return r};
+    for(const raw of lines.slice(hi+1)){
+      let t=raw.replace(/\[[^\]]*\]/g,' ');
+      if(!/\t/.test(t)&&sp(t).length===cols.length)t=sp(t).join('\t');
+      const tok=t.split('\t').map(x=>x.trim()).filter(Boolean).join(' ').replace(/\$\s+/g,'$').split(/\s+/).filter(Boolean);
+      if(tok.length<left.length+right.length+1)continue;
+      if(/^(sub)?total|^iva|^observ/i.test(tok[0]))continue;
+      const Lt=tok.slice(0,left.length),Rt=right.length?tok.slice(-right.length):[];
+      if(!Rt.every(esN))continue;
+      const v={};left.forEach((k,j)=>v[k]=Lt[j]);right.forEach((k,j)=>v[k]=Rt[j]);
+      if(left.includes('cant')&&!esN(v.cant))continue;
+      const d=tok.slice(left.length,tok.length-right.length).join(' ').trim();
+      if(d.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ]/g,'').length<3)continue;
+      const c=num(v.cant)||1;let pu=v.unit!==undefined?num(v.unit):0;if(v.total!==undefined&&num(v.total))pu=num(v.total)/c;
+      out.push({d,c,p:Math.round((pu||0)*10000)/10000});
+    }
+    if(out.length)return out;
+  }
   /* Encabezado: si hay una columna CANT/CANTIDAD, se usa esa como cantidad y se ignora CÓDIGO */
   let H=null;
   for(const raw of text.split(/\r?\n/)){
