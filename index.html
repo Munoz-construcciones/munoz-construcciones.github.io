@@ -145,6 +145,8 @@ select:focus,input:focus{outline:2px solid var(--acc);border-color:var(--acc)}
 .res table{width:100%;border-collapse:collapse;margin-bottom:16px}
 .res td{padding:10px 4px;border-bottom:1px solid var(--line);font-size:15px}
 .res td.q{text-align:right;font:700 16px Archivo;white-space:nowrap}
+.res td.q small.pm{font:500 11.5px Inter;color:var(--muted)}
+.res tr.tot td{background:#fff4ec}
 .res td small{display:block;color:var(--muted);font-size:12px}
 .modo{display:grid;grid-template-columns:1fr 1fr;border:1px solid #cfd3d8;border-radius:8px;overflow:hidden;margin-bottom:16px}
 .modo button{border:0;background:#fff;padding:10px 6px;font:600 13px Inter;color:var(--ink2);cursor:pointer}
@@ -616,6 +618,7 @@ function calc(){
   if(t==='tabique'||t==='revest'){
     const caras=t==='tabique'?2:1, p=t==='tabique'?$('perfil').value:'35';
     const tramos=C(b/2.6), mont=(C(a/0.4)+1)*tramos, m2p=E.neta*caras;
+    add(+m2p.toFixed(2),'m²','Total de placa a cubrir',caras===2?'Las dos caras de la pared':'Una cara');
     add(C(m2p/2.88*1.05),'u',PLACA[$('placa').value],caras===2?'Las dos caras':'Una cara');
     add(mont,'u',`Montante Barbieri ${p} (2,60 m)`,'Cada 40 cm');
     add(2*C(a/2.6),'u',`Solera Barbieri ${p} (2,60 m)`,'Piso y techo');
@@ -626,6 +629,7 @@ function calc(){
     add(C(m2p*1.5/45),'rollo','Cinta tramada 45 m','');
   } else if(t==='cielo'){
     const vig=(C(b/0.4)+1)*C(a/2.6)+(C(a/1.2)+1)*C(b/2.6);
+    add(+area.toFixed(2),'m²','Total de placa a cubrir','Superficie del cielorraso');
     add(C(area/2.88*1.05),'u',PLACA[$('placa').value],'');
     add(vig,'u','Montante Barbieri 35 (2,60 m)','Vigas cada 40 cm y maestras');
     add(C(per/2.6),'u','Solera Barbieri 35 (2,60 m)','Perimetral');
@@ -651,6 +655,7 @@ function calc(){
     add(C(per/0.6),'u','Tarugo 6 + tornillo Fix','');
   } else if(t==='desm'){
     const filas=Math.max(1,C(b/1.22));
+    add(+area.toFixed(2),'m²','Total de placa a cubrir','Superficie del cielorraso');
     add(C(area/0.367*1.05),'u','Placa Knauf Nebula lisa 60,6 × 60,6','');
     add(C(per/3.05*1.05),'u','Perimetral TX 15/16 (3,05 m)','');
     add(C(filas*a/3.66),'u','Larguero TX 15/16 (3,66 m)','Cada 1,22 m');
@@ -660,10 +665,12 @@ function calc(){
     const n=C(a/0.4)+1, area=E.neta;
     add(+(n*b).toFixed(1),'m','Perfil PGC 100 e 0,94','Montantes cada 40 cm (largo de barra a confirmar)');
     add(+(2*a).toFixed(1),'m','Perfil PGU 100 e 0,94','Solera inferior y superior');
+    add(+area.toFixed(2),'m²','Total de OSB a cubrir','Cara exterior');
     add(C(area/2.977*1.05),'u','Placa OSB 9,5 mm (1,22 × 2,44)','Cara exterior');
     add(C(area*1.05),'m²','Aislación de lana de vidrio','Entre perfiles');
     add(C(area*1.1),'m²','Barrera de agua y viento','Sobre el OSB');
     add(C(area*1.1),'m²','Malla de fibra de vidrio','Con el base coat');
+    add(+area.toFixed(2),'m²','Total de placa interior a cubrir','Cara interior');
     add(C(area/2.88*1.05),'u','Placa Knauf estándar 12,5 mm','Cara interior');
     add(C(area*4/25),'bolsa','Base coat Anclaflex 25 kg','Terminación exterior');
     add(r50(area*20),'u','Tornillo T2 punta mecha','Para OSB');
@@ -681,7 +688,11 @@ function calc(){
     add(+(E.neta).toFixed(2),'m²','Superficie a revestir',R_AB(E));
     add(r50(E.neta*25),'u','Tornillo T2','Para fijar a la estructura · unos 25 por m²');
   }
-  return {t,a,b,area,neta:E.neta,ab:E.ab,out};
+  const sup=PARED.includes(t)?E.neta:area;
+  const iSup=out.findIndex(o=>o.n==='Superficie a revestir'); if(iSup>0) out.unshift(out.splice(iSup,1)[0]);
+  if(!['wpc','marmol'].includes(t)&&sup>0) out.unshift({q:+sup.toFixed(2),u:'m²',n:'Superficie de la obra',d:t==='pvc'?'Superficie del cielorraso, sin sobrantes':R_AB(E)||'Largo × '+(TECHO.includes(t)?'ancho':'alto'),tot:1});
+  out.forEach(o=>{if(sup>0&&!o.tot&&!['txt','$'].includes(o.u)&&!(o.u==='m²'&&/^(Total|Superficie)/.test(o.n)))o.pm=o.q/sup;});
+  return {t,a,b,area,neta:E.neta,ab:E.ab,sup,out};
 }
 /* Tiras de PVC: largos disponibles 6, 5, 4, 3, 2 y 1 m */
 const LARGOS=[1,2,3,4,5,6];
@@ -758,10 +769,10 @@ function update(){
   if(R.ab>0) md.push(`Descontamos ${fmt(R.ab)} m² de aberturas`);
   if(MODO==='m2'&&t!=='pvc') md.push(ceil?'Medidas estimadas a partir de los m²':'Largo estimado a partir de los m²');
   $('medidas').innerHTML=md.map(x=>'<span>'+x+'</span>').join('');
-  $('resBody').innerHTML=R.out.length?R.out.map(o=>`<tr><td>${o.n}${o.d?`<small>${o.d}</small>`:''}</td><td class="q">${o.u==='txt'?'A confirmar':o.u==='$'?'$ '+fmt(o.q):fmt(o.q)+' '+o.u}</td></tr>`).join(''):'<tr><td>Cargá las medidas para ver la lista.</td></tr>';
+  $('resBody').innerHTML=R.out.length?R.out.map(o=>`<tr${o.tot||(o.u==='m²'&&/^(Total|Superficie)/.test(o.n))?' class="tot"':''}><td>${o.n}${o.d?`<small>${o.d}</small>`:''}</td><td class="q">${o.u==='txt'?'A confirmar':o.u==='$'?'$ '+fmt(o.q):fmt(o.q)+' '+o.u}${o.pm?`<small class="pm">${fmt(+o.pm.toFixed(o.pm<1?2:1))} ${o.u} por m²</small>`:''}</td></tr>`).join(''):'<tr><td>Cargá las medidas para ver la lista.</td></tr>';
   const linea=(MODO==='m2'&&t!=='pvc')?`${fmt(R.area)} m² (cargué la superficie)`:`${fmt(R.a)} × ${fmt(R.b)} m (${fmt(R.area)} m²)`;
   const abm=R.ab>0?`\nPuertas: ${+$('puertas').value||0} · Ventanas: ${+$('ventanas').value||0} (superficie neta ${fmt(R.neta)} m²)`:'';
-  const msg=`Hola Muñoz! Usé la calculadora de la web.\n${NOMBRE[t]}: ${linea}${abm}\n\n`+R.out.map(o=>`• ${o.u==='txt'?'A confirmar':o.u==='$'?'$ '+fmt(o.q):fmt(o.q)+' '+o.u} — ${o.n}${o.u==='tiras'?` (${o.d})`:''}`).join('\n')+`\n\n¿Me pasan presupuesto?`;
+  const msg=`Hola Muñoz! Usé la calculadora de la web.\n${NOMBRE[t]}: ${linea}${abm}\n\n`+R.out.map(o=>`• ${o.u==='txt'?'A confirmar':o.u==='$'?'$ '+fmt(o.q):fmt(o.q)+' '+o.u} — ${o.n}${o.u==='tiras'?` (${o.d})`:''}${o.pm?` [${fmt(+o.pm.toFixed(o.pm<1?2:1))} ${o.u}/m²]`:''}`).join('\n')+`\n\n¿Me pasan presupuesto?`;
   $('waBtn').href='https://wa.me/5492364242318?text='+encodeURIComponent(msg);
 }
 ['tipo','m1','m2','sup','altoM2','puertas','ventanas','placa','perfil','pvcT','tiraL'].forEach(id=>$(id).addEventListener('input',update));
